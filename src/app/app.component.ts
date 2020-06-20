@@ -75,6 +75,16 @@ export class AppComponent {
 
     onLogout() {
         this.chatService.logOut();
+        this.socketIOService.RemoveUser();
+        sessionStorage.clear();
+        location.reload();
+        localStorage.clear();
+    }
+
+    Logout() {
+        this.socketIOService.RemoveUser();
+        sessionStorage.clear();
+        location.reload();
     }
 
     async onRegister() {

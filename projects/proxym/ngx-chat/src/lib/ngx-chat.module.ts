@@ -47,6 +47,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {VideoComponent} from './components/communication/video.component';
 import {SocketIOService} from './services/socket.io.service';
+import { AudioComponent } from './components/communication/audio.component';
 
 @NgModule({
     imports: [
@@ -74,6 +75,7 @@ import {SocketIOService} from './services/socket.io.service';
         FileDropComponent,
         MultiUserChatComponent,
         VideoComponent,
+        AudioComponent,
     ],
     exports: [
         ChatComponent,

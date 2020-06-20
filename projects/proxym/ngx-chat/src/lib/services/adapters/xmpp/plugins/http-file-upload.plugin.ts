@@ -41,7 +41,9 @@ export class HttpFileUploadPlugin extends AbstractXmppPlugin {
     async upload(file: File) {
         await this.uploadService;
         const {name, size, type} = file;
-        const slotUrl = await this.requestSlot(name, size.toString(), type);
+        let slotUrl = await this.requestSlot(name, size.toString(), type);
+        slotUrl = 'https' + slotUrl.toString().substring(4);
+        console.log('slotyy', slotUrl.toString().substring(4));
         return this.uploadToSlot(slotUrl, file);
     }
 

@@ -62,9 +62,22 @@ export class SocketIOService {
             toid: to
         });
     }
+    public AudioCallRequest(from, to) {
+        this.socket.emit('audio-call', {
+            fromname: from,
+            toid: to
+        });
+    }
     public OnVideoCallRequest() {
         return Observable.create((observer) => {
             this.socket.on('video-call', (data) => {
+                observer.next(data);
+            });
+        });
+    }
+    public OnAudioCallRequest() {
+        return Observable.create((observer) => {
+            this.socket.on('audio-call', (data) => {
                 observer.next(data);
             });
         });
@@ -75,9 +88,22 @@ export class SocketIOService {
             toid: to
         });
     }
+    public AudioCallAccepted(from, to) {
+        this.socket.emit('audio-call-accept', {
+            fromname: from,
+            toid: to
+        });
+    }
     public OnVideoCallAccepted() {
         return Observable.create((observer) => {
             this.socket.on('video-call-accept', (data) => {
+                observer.next(data);
+            });
+        });
+    }
+    public OnAudioCallAccepted() {
+        return Observable.create((observer) => {
+            this.socket.on('audio-call-accept', (data) => {
                 observer.next(data);
             });
         });
@@ -100,10 +126,25 @@ export class SocketIOService {
             toname: toname
         });
     }
+    public EndAudioCall(from, to, toname) {
+        this.socket.emit('end-audio-call', {
+            fromname: from,
+            toid: to,
+            toname: toname
+        });
+    }
     public OnVideoCallEnded() {
         this.socket.emit('get-busy-user');
         return Observable.create((observer) => {
             this.socket.on('video-call-ended', (data) => {
+                observer.next(data);
+            });
+        });
+    }
+    public OnAudioCallEnded() {
+        this.socket.emit('get-busy-user');
+        return Observable.create((observer) => {
+            this.socket.on('audio-call-ended', (data) => {
                 observer.next(data);
             });
         });
@@ -117,6 +158,19 @@ export class SocketIOService {
     public OnVideoCallRejected() {
         return Observable.create((observer) => {
             this.socket.on('video-call-reject', (data) => {
+                observer.next(data);
+            });
+        });
+    }
+    public AudioCallRejected(from, to) {
+        this.socket.emit('audio-call-reject', {
+            fromname: from,
+            toid: to
+        });
+    }
+    public OnAudioCallRejected() {
+        return Observable.create((observer) => {
+            this.socket.on('audio-call-reject', (data) => {
                 observer.next(data);
             });
         });

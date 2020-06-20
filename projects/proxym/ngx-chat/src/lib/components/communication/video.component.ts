@@ -378,14 +378,14 @@ export class VideoComponent implements OnInit {
         });
 
         // stop both video and audio
-        this.localStream.getTracks().forEach((track) => {
+       /* this.localStream.getTracks().forEach((track) => {
             track.stop();
-        });
+        });*/
         // stop only audio
        // this.localStream.getAudioTracks()[0].stop();
         //stop only audio
-       // this.localStream.getVideoTracks()[0].stop();
-        //this.peerConnection.close();
+        this.localStream.getVideoTracks()[0].stop();
+        // this.peerConnection.close();
 
         this.peerConnection = new RTCPeerConnection();
         this.callback.emit({ status: "ended" });

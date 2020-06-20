@@ -24,9 +24,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     public callee: any;
     public callingInfo = { name: '', content: '', type: '' };
     public isVideoCallAccepted = false;
+    public isAudioCallAccepted = false;
     public userType: string;
     public caller: any;
     public c: any;
+    public video;
     contact: Contact;
 
     presence = Presence;
@@ -51,9 +53,17 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.httpFileUploadPlugin = this.chatService.getPlugin(HttpFileUploadPlugin);
         this.loggedUserName = sessionStorage.getItem('username');
        // this.GetLiveUsers();
+        this.GetLiveUsers();
+        this.OnVideoCallRequest();
+        this.OnVideoCallAccepted();
+        this.OnAudioCallRequest();
+        this.OnAudioCallAccepted();
+        this.GetBusyUsers();
+        this.OnVideoCallRejected();
+        this.OnAudioCallRejected();
     }
 
-    async ngOnInit() {
+     ngOnInit() {
         this.chatWindowState.contact.messages$
             .pipe(
                 filter(message => message.direction === Direction.in),
@@ -67,11 +77,13 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.OnVideoCallAccepted();
         this.GetBusyUsers();
         this.OnVideoCallRejected();
-        await this.delay(1000);
-        console.log('liveanis', this.liveUserList);
-        console.log('nameanis',  this.chatWindowState.contact.name.substring(0, 4));
-        this.c = this.liveUserList.find(a => a.username == this.chatWindowState.contact.name.substring(0, 4));
-        console.log('canis', this.c);
+        this.OnAudioCallRequest();
+        this.OnAudioCallAccepted();
+        this.OnAudioCallRejected();
+        // console.log('liveanis', this.liveUserList);
+        // console.log('nameanis',  this.chatWindowState.contact.name.substring(0, 4));
+       // this.c = this.liveUserList.find(a => a.username == this.chatWindowState.contact.name.substring(0, 4));
+        // console.log('canis', this.c);
     }
 
     ngOnDestroy() {
@@ -121,9 +133,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.socketIOService
             .GetConnectedUsers()
             .subscribe(data => {
-                let users = data.filter(a => a.username != this.loggedUserName);
+                const users = data.filter(a => a.username != this.loggedUserName);
                 let count = 0;
-                for (let i in users) {
+                for (const i in users) {
                     if (this.liveUserList.indexOf(data[i]) === -1) {
                         count++;
                     }
@@ -145,16 +157,39 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
                 this.isVideoCall = true;
             });
     }
+
+    OnAudioCallRequest() {
+        this.socketIOService
+            .OnAudioCallRequest()
+            .subscribe(data => {
+                this.callingInfo.name = data.fromname;
+                this.callingInfo.content = 'Calling....';
+                this.callingInfo.type = 'receiver';
+                this.isAudioCall = true;
+            });
+    }
     OnVideoCallAccepted() {
         this.socketIOService
             .OnVideoCallAccepted()
             .subscribe(data => {
-                let calee = this.liveUserList.find(a => a.username == this.callingInfo.name);
+                const calee = this.liveUserList.find(a => a.username == this.callingInfo.name);
                 this.userType = 'dialer';
                 this.caller = calee.id;
                 this.isVideoCallAccepted = true;
                 this.socketIOService.BusyNow();
-                this.Close();
+                this.CloseVideo();
+            });
+    }
+    OnAudioCallAccepted() {
+        this.socketIOService
+            .OnAudioCallAccepted()
+            .subscribe(data => {
+                const calee = this.liveUserList.find(a => a.username == this.callingInfo.name);
+                this.userType = 'dialer';
+                this.caller = calee.id;
+                this.isAudioCallAccepted = true;
+                this.socketIOService.BusyNow();
+                this.CloseAudio();
             });
     }
     GetBusyUsers() {
@@ -163,7 +198,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 this.liveUserList.forEach(a => { a.busy = false; });
                 data.forEach(a => {
-                    let usr = this.liveUserList.find(b => b.username == a.username);
+                    const usr = this.liveUserList.find(b => b.username == a.username);
                     if (usr) {
                         usr.busy = true;
                     }
@@ -176,7 +211,17 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 this.callingInfo.content = 'Call Rejected ..';
                 setTimeout(() => {
-                    this.Close();
+                    this.CloseVideo();
+                }, 1000);
+            });
+    }
+    OnAudioCallRejected() {
+        this.socketIOService
+            .OnAudioCallRejected()
+            .subscribe(data => {
+                this.callingInfo.content = 'Call Rejected ..';
+                setTimeout(() => {
+                    this.CloseAudio();
                 }, 1000);
             });
     }
@@ -184,25 +229,52 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.isChat = true;
     }
 
-    VideoCall(callee) {
+    VideoCall() {
+        this.GetLiveUsers();
+        let mySubString = '';
+        if (this.chatWindowState.contact.name.indexOf('@') > 0) {
+            mySubString = this.chatWindowState.contact.name.substring(
+                0,
+                this.chatWindowState.contact.name.lastIndexOf('@')
+            );
+        } else {
+            mySubString = this.chatWindowState.contact.name.substring(
+                0,
+                this.chatWindowState.contact.name.lastIndexOf(' ')
+            );
+        }
+
+        console.log('helloo', mySubString.toLowerCase());
+        const callee = this.liveUserList.find(a => a.username == mySubString.toLowerCase());
+        console.log('anuips', callee);
         console.log('calleename', this.liveUserList);
-        var calee = this.liveUserList.find(a => a.username == callee.username);
+        const calee = this.liveUserList.find(a => a.username == callee.username);
         console.log('anios', this.loggedUserName);
         if (calee) {
             this.socketIOService.VideoCallRequest(this.loggedUserName, calee.id);
           //  console.log('calleeid', calee.id);
         }
-            this.callee = callee;
-            this.callingInfo.name = callee.username;
+        this.callee = callee;
+        this.callingInfo.name = callee.username;
 
-            this.callingInfo.content = 'Dialing....';
-            this.callingInfo.type = 'dialer';
-            this.isVideoCall = true;
+        this.callingInfo.content = 'Dialing....';
+        this.callingInfo.type = 'dialer';
+        this.isVideoCall = true;
         console.log('infooo', this.callingInfo.type);
     }
 
+    ChangeVideo() {
+        this.video = true;
+        console.log('videoo', true);
+    }
+
+    ChangeAudio() {
+        this.video = false;
+        console.log('videoo', false);
+    }
+
     AcceptVideoCall() {
-        let calee = this.liveUserList.find(a => a.username == this.callingInfo.name);
+        const calee = this.liveUserList.find(a => a.username == this.callingInfo.name);
         if (calee) {
             this.socketIOService.VideoCallAccepted(this.loggedUserName, calee.id);
             this.userType = 'receiver';
@@ -210,24 +282,77 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
             this.isVideoCallAccepted = true;
             this.socketIOService.BusyNow();
         }
-        this.Close();
+        this.CloseVideo();
+    }
+    AcceptAudioCall() {
+        const calee = this.liveUserList.find(a => a.username == this.callingInfo.name);
+        if (calee) {
+            this.socketIOService.AudioCallAccepted(this.loggedUserName, calee.id);
+            this.userType = 'receiver';
+            this.caller = calee.id;
+            this.isAudioCallAccepted = true;
+            this.socketIOService.BusyNow();
+        }
+        this.CloseAudio();
     }
 
     RejectVideoCall() {
-        let calee = this.liveUserList.find(a => a.username == this.callingInfo.name);
+        const calee = this.liveUserList.find(a => a.username == this.callingInfo.name);
         console.log('calleeid', this.callingInfo.name);
         console.log('kaiss', this.loggedUserName);
         if (calee) {
             this.socketIOService.VideoCallRejected(this.loggedUserName, calee.id);
             this.isVideoCallAccepted = false;
         }
-        this.Close();
-    }
-    AudioCall() {
-        this.isAudioCall = true;
+        this.CloseVideo();
     }
 
-    CallBack(event) {
+    RejectAudioCall() {
+        const calee = this.liveUserList.find(a => a.username == this.callingInfo.name);
+        console.log('calleeid', this.callingInfo.name);
+        console.log('kaiss', this.loggedUserName);
+        if (calee) {
+            this.socketIOService.AudioCallRejected(this.loggedUserName, calee.id);
+            this.isAudioCallAccepted = false;
+        }
+        this.CloseAudio();
+    }
+    AudioCall() {
+        this.GetLiveUsers();
+        let mySubString = '';
+        if (this.chatWindowState.contact.name.indexOf('@') > 0) {
+            mySubString = this.chatWindowState.contact.name.substring(
+                0,
+                this.chatWindowState.contact.name.lastIndexOf('@')
+            );
+        } else {
+            mySubString = this.chatWindowState.contact.name.substring(
+                0,
+                this.chatWindowState.contact.name.lastIndexOf(' ')
+            );
+        }
+
+        console.log('helloo', mySubString.toLowerCase());
+        const callee = this.liveUserList.find(a => a.username == mySubString.toLowerCase());
+        console.log('anuips', callee);
+        console.log('calleename', this.liveUserList);
+        const calee = this.liveUserList.find(a => a.username == callee.username);
+        console.log('anios', this.loggedUserName);
+        if (calee) {
+            this.socketIOService.AudioCallRequest(this.loggedUserName, calee.id);
+            //  console.log('calleeid', calee.id);
+        }
+        this.callee = callee;
+        this.callingInfo.name = callee.username;
+
+        this.callingInfo.content = 'Dialing....';
+        this.callingInfo.type = 'dialer';
+        this.isAudioCall = true;
+        console.log('infooo', this.callingInfo.type);
+    }
+
+
+    CallBackVideo(event) {
         this.isChat = false;
         this.isVideoCall = false;
         this.isAudioCall = false;
@@ -236,10 +361,25 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         location.reload();
     }
 
-    Close() {
+    CallBackAudio(event) {
+        this.isChat = false;
+        this.isVideoCall = false;
+        this.isAudioCall = false;
+        this.isAudioCallAccepted = false;
+        this.changeDetector.detectChanges();
+        location.reload();
+    }
+
+    CloseVideo() {
         this.isVideoCall = false;
         this.changeDetector.detectChanges();
     }
+
+    CloseAudio() {
+        this.isAudioCall = false;
+        this.changeDetector.detectChanges();
+    }
+
     Logout() {
         this.socketIOService.RemoveUser();
         sessionStorage.clear();

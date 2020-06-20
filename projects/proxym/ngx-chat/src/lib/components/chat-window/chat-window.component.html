@@ -3,24 +3,24 @@
     <ngx-chat-filedrop [enabled]="httpFileUploadPlugin.fileUploadSupported"
                        (fileUpload)="uploadFile($event)"
                        [dropMessage]="chatService.translations.dropMessage">
-        <div [title]="chatWindowState.contact.name" class="chat-contact-header">
+        <div (click)="onClickHeader()" [title]="chatWindowState.contact.name" class="chat-contact-header">
             <div class="chat-contact-avatar">
                 <img [src]="chatWindowState.contact.avatar"/>
             </div>
 
-            <div class="chat-contact-name">
-                {{chatWindowState.contact.name.substring(0, 4)}}
+            <div class="chat-contact-name" style="color: white">
+                {{chatWindowState.contact.name}}
             </div>
             <div class="chat-video-audio-call">
-                <!--  <i aria-hidden="true" class="ffa fa-video-camera"></i> -->
-                <button (click)="VideoCall(c)"> video</button>
 
-                <i aria-hidden="true" class="fa fa-phone" style="margin-left: 8px;margin-right: 10px;"></i>
+                <i  aria-hidden="true"  class="ffa fa-video-camera" (click)="VideoCall()" ></i>
+
+                <i aria-hidden="true" class="fa fa-phone" (click)="AudioCall()" style="margin-left: 15px;margin-right: 10px;"></i>
 
 
             </div>
 
-            <div class="chat-close" (click)="onClickClose()">
+            <div class="chat-close" (click)="onClickClose()" style="color: white">
                 &times;
             </div>
         </div>
@@ -41,7 +41,7 @@
         </div>
         <div *ngIf="isVideoCall" class="popup-box">
             <div class="popup-content">
-                <span (click)="Close()" class="popup-close">&times;</span>
+                <span (click)="CloseVideo()" class="popup-close">&times;</span>
                 <div class="popup-header">
                     <h4>{{callingInfo.name}}</h4>
                     <h5>{{callingInfo.content}}</h5>
@@ -53,11 +53,40 @@
             </div>
 
         </div>
-        <div class="col-md-10">
-            <ngx-chat-video-call (callback)="CallBack($event)" *ngIf="isVideoCallAccepted" [caller]="caller"
-                                 [userType]="userType">Loading
-            </ngx-chat-video-call>
+
+        <div *ngIf="isAudioCall" class="popup-box">
+            <div class="popup-content">
+                <span (click)="CloseAudio()" class="popup-close">&times;</span>
+                <div class="popup-header">
+                    <h4>{{callingInfo.name}}</h4>
+                    <h5>{{callingInfo.content}}</h5>
+                </div>
+                <div *ngIf="callingInfo.type == 'receiver'" style="text-align: center;">
+                    <button (click)="AcceptAudioCall()" class="btn btn-success btn-sm">Accept</button>
+                    <button (click)="RejectAudioCall()" class="btn btn-danger btn-sm">Reject</button>
+                </div>
+            </div>
+
         </div>
+
+        <div  *ngIf="isVideoCallAccepted" class="popup-box">
+            <div class="popup-content">
+                <ngx-chat-video-call (callback)="CallBackVideo($event)" *ngIf="isVideoCallAccepted" [caller]="caller"
+                                     [userType]="userType">Loading
+                </ngx-chat-video-call>
+            </div>
+
+        </div>
+
+        <div  *ngIf="isAudioCallAccepted" class="popup-box">
+            <div class="popup-content">
+                <ngx-chat-audio-call (callback)="CallBackAudio($event)" *ngIf="isAudioCallAccepted" [caller]="caller"
+                                     [userType]="userType">Loading
+                </ngx-chat-audio-call>
+            </div>
+
+        </div>
+
     </ngx-chat-filedrop>
 </div>
 

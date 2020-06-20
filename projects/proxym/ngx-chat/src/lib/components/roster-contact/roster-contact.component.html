@@ -1,0 +1,29 @@
+<div [title]="contact.name" class="roster-contact">
+
+    <div class="roster-contact-avatar">
+        <img [src]="contact.avatar"/>
+    </div>
+    <div class="roster-contact-status">
+        <div *ngIf="(contact.presence$ | async) == presence.present"
+             [ngClass]="'roster-presence--' + (contact.presence$ | async)" class="roster-presence">●
+        </div>
+        <div *ngIf="(contact.presence$ | async) == presence.unavailable"
+             [ngClass]="'roster-presence--' + (contact.presence$ | async)" class="roster-presence">●
+        </div>
+        <div *ngIf="(contact.presence$ | async) == presence.away"
+             [ngClass]="'roster-presence--' + (contact.presence$ | async)" class="roster-presence">●
+        </div>
+
+
+        <!--   <div *ngIf="(contact.presence$ | async) == presence.unavailable"
+                [ngClass]="'roster-presence--' + (contact.presence$ | async)" class="roster-presence">●
+           </div>-->
+    </div>
+
+    <div class="roster-contact-name">
+        {{contact.name}}
+    </div>
+
+
+    <div *ngIf="unreadCount" class="unread-message-badge">{{unreadCount}}</div>
+</div>

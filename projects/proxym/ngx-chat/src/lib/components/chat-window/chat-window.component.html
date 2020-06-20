@@ -1,0 +1,64 @@
+<div class="chat-window">
+
+    <ngx-chat-filedrop [enabled]="httpFileUploadPlugin.fileUploadSupported"
+                       (fileUpload)="uploadFile($event)"
+                       [dropMessage]="chatService.translations.dropMessage">
+        <div [title]="chatWindowState.contact.name" class="chat-contact-header">
+            <div class="chat-contact-avatar">
+                <img [src]="chatWindowState.contact.avatar"/>
+            </div>
+
+            <div class="chat-contact-name">
+                {{chatWindowState.contact.name.substring(0, 4)}}
+            </div>
+            <div class="chat-video-audio-call">
+                <!--  <i aria-hidden="true" class="ffa fa-video-camera"></i> -->
+                <button (click)="VideoCall(c)"> video</button>
+
+                <i aria-hidden="true" class="fa fa-phone" style="margin-left: 8px;margin-right: 10px;"></i>
+
+
+            </div>
+
+            <div class="chat-close" (click)="onClickClose()">
+                &times;
+            </div>
+        </div>
+        <div *ngIf="!chatWindowState.isCollapsed" class="chat-content" (click)="onFocus()">
+            <ngx-chat-message-list [contact]="chatWindowState.contact" [showAvatars]="false"></ngx-chat-message-list>
+            <div class="chat-input-container">
+                <ngx-chat-message-input [contact]="chatWindowState.contact"></ngx-chat-message-input>
+
+
+                <img (click)="onActionClick(action)"
+                     *ngFor="let action of chatService.chatActions"
+                     [ngClass]="action.cssClass"
+                     [src]="imgSendMessage"
+                     class="chat-action"/>
+
+
+            </div>
+        </div>
+        <div *ngIf="isVideoCall" class="popup-box">
+            <div class="popup-content">
+                <span (click)="Close()" class="popup-close">&times;</span>
+                <div class="popup-header">
+                    <h4>{{callingInfo.name}}</h4>
+                    <h5>{{callingInfo.content}}</h5>
+                </div>
+                <div *ngIf="callingInfo.type == 'receiver'" style="text-align: center;">
+                    <button (click)="AcceptVideoCall()" class="btn btn-success btn-sm">Accept</button>
+                    <button (click)="RejectVideoCall()" class="btn btn-danger btn-sm">Reject</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-10">
+            <ngx-chat-video-call (callback)="CallBack($event)" *ngIf="isVideoCallAccepted" [caller]="caller"
+                                 [userType]="userType">Loading
+            </ngx-chat-video-call>
+        </div>
+    </ngx-chat-filedrop>
+</div>
+
+

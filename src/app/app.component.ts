@@ -1,17 +1,15 @@
-import { Component, Inject } from '@angular/core';
-import {
-    ChatBackgroundNotificationService,
-    ChatListStateService,
-    ChatService,
-    ChatServiceToken,
-    ContactFactoryService,
-    LogInRequest,
-    LogLevel,
-    LogService,
-    MultiUserChatPlugin,
-    RegistrationPlugin,
-    UnreadMessageCountPlugin,
-} from '@pazznetwork/ngx-chat';
+import {Component, Inject} from '@angular/core';
+import {ChatService, ChatServiceToken} from '../../projects/proxym/ngx-chat/src/lib/services/chat-service';
+import {ChatBackgroundNotificationService} from '../../projects/proxym/ngx-chat/src/lib/services/chat-background-notification.service';
+import {ChatListStateService} from '../../projects/proxym/ngx-chat/src/lib/services/chat-list-state.service';
+import {ContactFactoryService} from '../../projects/proxym/ngx-chat/src/lib/services/contact-factory.service';
+import {LogInRequest} from '../../projects/proxym/ngx-chat/src/lib/core/log-in-request';
+import {LogLevel, LogService} from '../../projects/proxym/ngx-chat/src/lib/services/log.service';
+import {MultiUserChatPlugin} from '../../projects/proxym/ngx-chat/src/lib/services/adapters/xmpp/plugins/multi-user-chat.plugin';
+import {RegistrationPlugin} from '../../projects/proxym/ngx-chat/src/lib/services/adapters/xmpp/plugins/registration.plugin';
+import {UnreadMessageCountPlugin} from '../../projects/proxym/ngx-chat/src/lib/services/adapters/xmpp/plugins/unread-message-count.plugin';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {SocketIOService} from 'projects/proxym/ngx-chat/src/lib/services/socket.io.service';
 
 @Component({
     selector: 'app-root',
@@ -24,6 +22,7 @@ export class AppComponent {
     public password: string;
     public username: string;
     public otherJid: any;
+    public loggedUserName;
     public multiUserChatPlugin: MultiUserChatPlugin;
     public unreadMessageCountPlugin: UnreadMessageCountPlugin;
     public registrationMessage: string;
@@ -32,6 +31,8 @@ export class AppComponent {
                 private contactFactory: ContactFactoryService,
                 private logService: LogService,
                 private chatListStateService: ChatListStateService,
+                private snackBar: MatSnackBar,
+                private socketIOService: SocketIOService,
                 chatBackgroundNotificationService: ChatBackgroundNotificationService) {
         const contactData: any = JSON.parse(localStorage.getItem('data')) || {};
         this.logService.logLevel = LogLevel.Debug;
@@ -45,20 +46,31 @@ export class AppComponent {
         this.unreadMessageCountPlugin = this.chatService.getPlugin(UnreadMessageCountPlugin);
 
         chatBackgroundNotificationService.enable();
-
         // @ts-ignore
         window.chatService = chatService;
     }
 
+    AddUser() {
+        this.socketIOService.SetUserName(this.loggedUserName)
+            .subscribe(data => {
+                if (data.username) {
+                    // user added
+                }
+            });
+    }
+
     onLogin() {
         const logInRequest: LogInRequest = {
-            domain: this.domain,
-            service: this.service,
+            domain: 'localhost',
+            service: 'wss://localhost:5280/xmpp',
             password: this.password,
             username: this.username,
         };
         localStorage.setItem('data', JSON.stringify(logInRequest));
+        sessionStorage.setItem('username', this.username);
         this.chatService.logIn(logInRequest);
+        this.loggedUserName = sessionStorage.getItem('username');
+        this.AddUser();
     }
 
     onLogout() {
@@ -79,6 +91,7 @@ export class AppComponent {
             this.registrationMessage = 'registration failed: ' + e.toString();
             throw e;
         }
+
     }
 
     onAddContact() {

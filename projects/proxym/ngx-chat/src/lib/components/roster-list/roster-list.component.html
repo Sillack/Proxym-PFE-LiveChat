@@ -1,0 +1,160 @@
+<div (click)="toggleVisibility()" [@drawerVisibility]="rosterState" class="roster-drawer">
+    <div *ngIf="rosterState === 'shown'" class="roster-drawer__button">&raquo;</div>
+    <div *ngIf="rosterState === 'hidden'" class="roster-drawer__button">&laquo;</div>
+</div>
+
+<div [@rosterVisibility]="rosterState" [attr.data-ngx-chat-state]="chatService.state$ | async" class="roster-list">
+
+    <div class="roster-header">
+        {{ chatService.translations.chat }}
+    </div>
+
+    <ng-container>
+        <div class="roster-group-header">{{chatService.translations.profile}}</div>
+
+        <mat-radio-group aria-label="Select an option" class="mat-radio-group">
+            <mat-radio-button (click)="sendStanzaChat()" [checked]="true" style="padding-right: 15px; color: #69ca48"
+                              value="1">
+                <img [src]="imgAvailable" style="margin-right: 31px;margin-bottom: 10px;"/>
+            </mat-radio-button>
+            <mat-radio-button (click)="sendStanzaAway()" style="color: #ffbe00;" value="2">
+                <img [src]="imgAway" style="margin-bottom: 12px;"/>
+            </mat-radio-button>
+        </mat-radio-group>
+
+
+        <!--  <div class="select-status">
+
+              <select [ngStyle]="{'color': statusColor}" (change)="modo($event.target.value)" class="browser-default custom-select" style="height: 27px;">
+                  <option selected value="1" style="color: #69ca48;">    ●  Available</option>
+                  <option value="2" style="color:#ffbe00;">   ●   Away</option>
+              </select>
+          </div>-->
+
+
+    </ng-container>
+    <ng-container>
+        <div class="roster-group-header">{{chatService.translations.addContact}}</div>
+
+        <div class="add-contacts">
+
+            <input [(ngModel)]="otherJid" placeholder="  username@localhost"
+                   type="text"/>
+
+            <div class="btn-a-r">
+                <button (click)="onAddContact()" class="btn-add">Add contact</button>
+                <button (click)="onRemoveContact()" class="btn-remove">Remove contact</button>
+            </div>
+
+        </div>
+
+
+    </ng-container>
+
+
+    <ng-container *ngIf="(contacts | async).length > 0">
+        <div class="roster-group-header">{{chatService.translations.contacts}}</div>
+        <div class="contact-list-wrapper">
+
+            <ngx-chat-roster-contact (click)="onClickContact(contact)"
+                                     *ngFor="let contact of (contacts | async)"
+                                     [contact]="contact">
+            </ngx-chat-roster-contact>
+
+        </div>
+    </ng-container>
+
+
+    <ng-container>
+        <div class="roster-group-header">{{chatService.translations.chatRooms}}</div>
+
+        <!--     <div class="room-list-wrapper">
+                 <ngx-chat-multi-user-chat>
+
+                 </ngx-chat-multi-user-chat>
+
+             </div>-->
+    </ng-container>
+
+
+    <ng-container *ngIf="(contactRequestsReceived$ | async).length > 0">
+        <div class="roster-group-header">{{chatService.translations.contactRequestIn}}</div>
+        <div class="contact-list-wrapper">
+
+            <ngx-chat-roster-contact (click)="onClickContact(contact)"
+                                     *ngFor="let contact of (contactRequestsReceived$ | async)"
+                                     [contact]="contact">
+            </ngx-chat-roster-contact>
+
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="(contactRequestsSent$ | async).length > 0">
+        <div class="roster-group-header">{{chatService.translations.contactRequestOut}}</div>
+        <div class="contact-list-wrapper">
+
+            <ngx-chat-roster-contact (click)="onClickContact(contact)"
+                                     *ngFor="let contact of (contactRequestsSent$ | async)"
+                                     [contact]="contact">
+            </ngx-chat-roster-contact>
+
+        </div>
+    </ng-container>
+
+    <!--  <ng-container *ngIf="(contactsUnaffiliated$ | async).length > 0">
+          <div class="roster-group-header">{{chatService.translations.contactsUnaffiliated}}</div>
+          <div class="contact-list-wrapper">
+
+              <ng-container *ngFor="let contact of (contactsUnaffiliated$ | async)">
+                  <ngx-chat-roster-contact *ngIf="contact.messages.length > 0"
+                                           [contact]="contact"
+                                           (click)="onClickContact(contact)">
+                  </ngx-chat-roster-contact>
+              </ng-container>
+
+          </div>
+      </ng-container>-->
+
+    <div *ngIf="hasNoContacts$ | async" class="roster-list__empty">
+        {{chatService.translations.noContacts}}
+    </div>
+
+    <!-- <ng-container *ngIf="chatService.enableDebugging">
+         <hr/>
+
+         <div class="contact-pending-request-received-wrapper">
+             debug contact requests in:
+             <div class="contact-pending-request-received" *ngFor="let request of (chatService.contactRequestsReceived$ | async)">
+                 {{request.name}}
+             </div>
+         </div>
+
+         <hr/>
+
+         <div class="contact-pending-request-sent-wrapper">
+             debug contact requests out:
+             <div class="contact-pending-request-sent" *ngFor="let request of (chatService.contactRequestsSent$ | async)">
+                 {{request.name}}
+             </div>
+         </div>
+
+         <hr/>
+
+         <p>
+             debug contacts (count: {{ (chatService.contacts$ | async).length }})<br/>
+         </p>
+         <p *ngFor="let contact of (chatService.contacts$|async)" style="margin-bottom: 1em">
+             <em>{{contact.name}}:</em><br/>
+             subscription={{contact.subscription$ | async}}<br/>
+             presence={{contact.presence$ | async}}<br/>
+             pendingIn={{contact.pendingIn$ | async}}<br/>
+             pendingOut={{contact.pendingOut$ | async}}
+         </p>
+         <p class="roster-debug-state">state: {{chatService.state$ | async}}</p>
+     </ng-container>-->
+
+
+    <div class="roster-footer">
+    </div>
+
+</div>

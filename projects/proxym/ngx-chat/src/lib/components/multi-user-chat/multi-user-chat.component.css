@@ -1,0 +1,24 @@
+ngx-chat-message-input {
+    display: block;
+    border: 1px solid #dadada;
+    width: 100%;
+    padding: 0.5em;
+}
+
+.join-room {
+    padding: 0em 1em 0em 1em;
+    margin-left: 60px;
+
+}
+
+.room-room {
+    display: block;
+    float: right;
+}
+
+
+.all-room{
+    margin-left: 50px;
+    margin-bottom: 40px;
+    margin-top: 10px;
+}

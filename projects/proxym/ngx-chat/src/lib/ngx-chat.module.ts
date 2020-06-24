@@ -48,6 +48,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {VideoComponent} from './components/communication/video.component';
 import {SocketIOService} from './services/socket.io.service';
 import { AudioComponent } from './components/communication/audio.component';
+import { NgxLinkPreviewModule } from '../../../../ngx-link-preview/src/lib/ngx-link-preview.module';
+
 
 @NgModule({
     imports: [
@@ -58,6 +60,7 @@ import { AudioComponent } from './components/communication/audio.component';
         MatRadioModule,
         MatSelectModule,
         NgbModule,
+        NgxLinkPreviewModule
     ],
     declarations: [
         ChatComponent,

@@ -1,1 +1,13 @@
 <a href="{{link}}" target="_blank" rel="noopener" (click)="onClick($event)">{{text}}</a>
+<div *ngIf="link.includes('.com') || link.includes('.fr') ">
+<ngx-link-preview
+                  apiRoute="demo"
+                  [links]="links"
+                  [getApiEndpoint$]="apiCallbackFn">
+</ngx-link-preview>
+</div>
+
+<div *ngIf="!link.includes('.')">
+    <img [src]="imgFile" style="max-width: 73px;"/>
+
+</div>

@@ -3,7 +3,7 @@
     <ngx-chat-filedrop [enabled]="httpFileUploadPlugin.fileUploadSupported"
                        (fileUpload)="uploadFile($event)"
                        [dropMessage]="chatService.translations.dropMessage">
-        <div (click)="onClickHeader()" [title]="chatWindowState.contact.name" class="chat-contact-header">
+        <div [title]="chatWindowState.contact.name" class="chat-contact-header">
             <div class="chat-contact-avatar">
                 <img [src]="chatWindowState.contact.avatar"/>
             </div>
@@ -44,7 +44,7 @@
         </div>
         <div *ngIf="isVideoCall" class="popup-box">
             <div class="popup-content">
-                <span (click)="CloseVideo()" class="popup-close">&times;</span>
+                <span (click)="RejectVideoCall()" class="popup-close">&times;</span>
                 <div class="popup-header">
                     <h4>{{callingInfo.name}}</h4>
                     <h5>{{callingInfo.content}}</h5>
@@ -59,7 +59,7 @@
 
         <div *ngIf="isAudioCall" class="popup-box">
             <div class="popup-content">
-                <span (click)="CloseAudio()" class="popup-close">&times;</span>
+                <span (click)="RejectAudioCall()" class="popup-close">&times;</span>
                 <div class="popup-header">
                     <h4>{{callingInfo.name}}</h4>
                     <h5>{{callingInfo.content}}</h5>

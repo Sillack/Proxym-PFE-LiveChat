@@ -7,7 +7,7 @@
 </ngx-link-preview>
 </div>
 
-<div *ngIf="!link.includes('.')">
+<div *ngIf="!link.includes('.jpg') && !link.includes('.png') && !link.includes('.jpeg') && !link.includes('.com') && !link.includes('.fr')">
     <img [src]="imgFile" style="max-width: 73px;"/>
 
 </div>

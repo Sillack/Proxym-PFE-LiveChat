@@ -42,6 +42,8 @@ export class ChatMessageComponent implements OnInit {
     imgReceived = require('../../../../../../../src/assets/received.png');
     imgSent = require('../../../../../../../src/assets/sent.png');
     imgSeen = require('../../../../../../../src/assets/seen.png');
+    imgAudio = require('../../../../../../../src/assets/icon-incoming-call.png');
+    imgVideo = require('../../../../../../../src/assets/video_call.png');
 
     public sentMessageTitle: string;
     public receivedMessageTitle: string;

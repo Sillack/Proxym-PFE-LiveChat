@@ -1,6 +1,6 @@
 let express = require('express');
 let app = express();
-const fs = require('fs')
+const fs = require('fs');
 let https = require('https');
 let path = require('path');
 app.use(express.static(__dirname + '/dist/chat-conference-plugin'));
@@ -8,8 +8,7 @@ app.get('/*', (req, res) => res.sendFile(path.join(__dirname)));
 const httpsOptions = {
     key: fs.readFileSync('./security/cert.key'),
     cert: fs.readFileSync('./security/cert.pem')
-}
-//let http = require('http');
+};
 
 
 let socketIO = require('socket.io');
@@ -23,7 +22,7 @@ var numUsers = 0;
 let server = https.createServer(httpsOptions, app)
     .listen(port, () => {
         console.log('server running at ' + port)
-    })
+    });
 let io = socketIO(server);
 io.on('connection', (socket) => {
     var addedUser = false;
@@ -206,33 +205,4 @@ io.on('connection', (socket) => {
         });
     });
 });
-
-var options = {
-    "method": "GET",
-    "hostname": "proclink.p.rapidapi.com",
-    "port": null,
-    "path": "/oembed?url=%7Burl%7D",
-    "headers": {
-        "x-rapidapi-host": "proclink.p.rapidapi.com",
-        "x-rapidapi-key": "SIGN-UP-FOR-KEY",
-        "useQueryString": true
-    }
-};
-
-var req = https.request(options, function (res) {
-    var chunks = [];
-
-    res.on("data", function (chunk) {
-        chunks.push(chunk);
-    });
-
-    res.on("end", function () {
-        var body = Buffer.concat(chunks);
-        console.log(body.toString());
-    });
-});
-
-req.end();
-
-
 

@@ -9,6 +9,10 @@ import {ChatMessageInputComponent} from '../chat-message-input/chat-message-inpu
 import {Contact} from '../../core/contact';
 import {Presence} from '../../core/presence';
 import { SocketIOService } from '../../services/socket.io.service';
+import {parse} from 'ltx';
+import {XmppChatAdapter} from '../../services/adapters/xmpp/xmpp-chat-adapter.service';
+import {formatDate } from '@angular/common';
+
 @Component({
     selector: 'ngx-chat-window',
     templateUrl: './chat-window.component.html',
@@ -46,23 +50,18 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     imgSendMessage = require('../../../../../../../src/assets/click.png');
     imgFileMessage = require('../../../../../../../src/assets/file.png');
 
+    today = new Date();
+    jstoday = '';
     constructor(
         @Inject(ChatServiceToken) public chatService: ChatService,
         private chatListService: ChatListStateService,
         private changeDetector: ChangeDetectorRef,
         private socketIOService: SocketIOService,
+        @Inject(ChatServiceToken) public chatServicee: XmppChatAdapter
     ) {
         this.httpFileUploadPlugin = this.chatService.getPlugin(HttpFileUploadPlugin);
         this.loggedUserName = sessionStorage.getItem('username');
-       // this.GetLiveUsers();
-        this.GetLiveUsers();
-        this.OnVideoCallRequest();
-        this.OnVideoCallAccepted();
-        this.OnAudioCallRequest();
-        this.OnAudioCallAccepted();
-        this.GetBusyUsers();
-        this.OnVideoCallRejected();
-        this.OnAudioCallRejected();
+
     }
 
      ngOnInit() {
@@ -82,10 +81,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.OnAudioCallRequest();
         this.OnAudioCallAccepted();
         this.OnAudioCallRejected();
-        // console.log('liveanis', this.liveUserList);
-        // console.log('nameanis',  this.chatWindowState.contact.name.substring(0, 4));
-       // this.c = this.liveUserList.find(a => a.username == this.chatWindowState.contact.name.substring(0, 4));
-        // console.log('canis', this.c);
     }
 
     ngOnDestroy() {
@@ -179,10 +174,13 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
                 this.caller = calee.id;
                 this.isVideoCallAccepted = true;
                 this.socketIOService.BusyNow();
+                this.sendStanzaVideo();
+
                 this.CloseVideo();
             });
     }
     OnAudioCallAccepted() {
+
         this.socketIOService
             .OnAudioCallAccepted()
             .subscribe(data => {
@@ -191,6 +189,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
                 this.caller = calee.id;
                 this.isAudioCallAccepted = true;
                 this.socketIOService.BusyNow();
+
+
+                this.sendStanzaAudio();
                 this.CloseAudio();
             });
     }
@@ -370,6 +371,31 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.socketIOService.RemoveUser();
         sessionStorage.clear();
         location.reload();
+    }
+
+    sendStanzaAudio() {
+        this.GetLiveUsers();
+        this.jstoday = formatDate(this.today, 'dd-MM-yyyy', 'en-US', 'CET');
+        const request = '<message xml:lang=\'en\' to=\'' + this.callingInfo.name + '@localhost\'' +
+            // tslint:disable-next-line:max-line-length
+            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Audio Call : ' + this.jstoday.toString() + '</body></message>';
+        if (request) {
+            this.chatServicee.chatConnectionService.send(parse(request));
+        }
+
+    }
+
+    sendStanzaVideo() {
+        console.log('aniosss', this.callingInfo.name);
+        this.GetLiveUsers();
+        this.jstoday = formatDate(this.today, 'dd-MM-yyyy', 'en-US', 'CET');
+        const request = '<message xml:lang=\'en\' to=\'' + this.callingInfo.name + '@localhost\'' +
+            // tslint:disable-next-line:max-line-length
+            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Video Call : ' + this.jstoday.toString() + '</body></message>';
+        if (request) {
+            this.chatServicee.chatConnectionService.send(parse(request));
+        }
+
     }
 }
 

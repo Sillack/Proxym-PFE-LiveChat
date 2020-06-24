@@ -1,4 +1,4 @@
-<div class="chat-message"
+<div class="chat-message" *ngIf="!message.body.includes('Audio Call :') && !message.body.includes('Video Call :') " style="margin-right: 0.6em;"
      [ngClass]="{'chat-message--in': message.direction === 'in', 'chat-message--out': message.direction === 'out'}">
     <div *ngIf="showAvatars" class="chat-message-avatar">
         <img *ngIf="message.direction === 'in'" [src]="avatar"/>
@@ -6,6 +6,7 @@
     </div>
     <div class="chat-message-text" [ngClass]="{'chat-message-text--no-avatar':!showAvatars}">
         <span [ngxChatLinks]="message.body"></span>
+
     </div>
     <div class="chat-message-image-wrapper" *ngIf="imageLink">
         <img class="chat-message-image" [src]="imageLink"/>
@@ -40,9 +41,64 @@
                 </ng-container>
 
             </ng-container>
+
         </small>
 
 
     </div>
 </div>
+
+
+<div class="chat-message" *ngIf="message.body.includes('Video Call :')" style="margin-right: 4.6em;margin-left: 4.0em;"
+     [ngClass]="{'chat-message--in': message.direction === 'in', 'chat-message--out': message.direction === 'out'}">
+    <div *ngIf="showAvatars" class="chat-message-avatar">
+        <img *ngIf="message.direction === 'in'" [src]="avatar"/>
+        <img *ngIf="message.direction === 'out'" [src]="chatService.userAvatar$ | async"/>
+    </div>
+    <div class="chat-message-text" [ngClass]="{'chat-message-text--no-avatar':!showAvatars}">
+        <span [ngxChatLinks]="message.body"></span>
+    </div>
+    <div class="chat-message-image-wrapper" *ngIf="imageLink">
+        <img class="chat-message-image" [src]="imageLink"/>
+    </div>
+    <div class="chat-message-footer">
+        <small class="chat-message-datetime">{{message.datetime | date:chatService.translations.timeFormat}}</small>
+        <img [src]="imgVideo"  class="chat-message-avatar" style="width: 32%; height: 32%; margin-left: 18px; margin-top: -8px;" />
+        <small title="{{nick}}" class="chat-message-name">
+
+
+        </small>
+
+
+    </div>
+</div>
+
+
+<div class="chat-message" *ngIf="message.body.includes('Audio Call :')" style="margin-left: 4.0em;margin-right: 4.6em;"
+     [ngClass]="{'chat-message--in': message.direction === 'in', 'chat-message--out': message.direction === 'out'}">
+    <div *ngIf="showAvatars" class="chat-message-avatar">
+        <img *ngIf="message.direction === 'in'" [src]="avatar"/>
+        <img *ngIf="message.direction === 'out'" [src]="chatService.userAvatar$ | async"/>
+    </div>
+    <div class="chat-message-text" [ngClass]="{'chat-message-text--no-avatar':!showAvatars}">
+
+        <span [ngxChatLinks]="message.body"></span>
+    </div>
+    <div class="chat-message-image-wrapper" *ngIf="imageLink">
+        <img class="chat-message-image" [src]="imageLink"/>
+    </div>
+    <div class="chat-message-footer">
+        <small class="chat-message-datetime">{{message.datetime | date:chatService.translations.timeFormat}}</small>
+        <img [src]="imgAudio"  class="chat-message-avatar" style="width: 32%; height: 32%; margin-left: 18px; margin-top: -8px;" />
+
+        <small title="{{nick}}" class="chat-message-name">
+
+
+        </small>
+
+
+    </div>
+</div>
+
+
 

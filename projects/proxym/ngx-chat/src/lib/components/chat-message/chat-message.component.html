@@ -49,7 +49,7 @@
 </div>
 
 
-<div class="chat-message" *ngIf="message.body.includes('Video Call :')" style="margin-right: 4.6em;margin-left: 4.0em;"
+<div class="chat-message" *ngIf="message.body.includes('Video')" style="margin-left: 4.0em;margin-right: 4.6em;"
      [ngClass]="{'chat-message--in': message.direction === 'in', 'chat-message--out': message.direction === 'out'}">
     <div *ngIf="showAvatars" class="chat-message-avatar">
         <img *ngIf="message.direction === 'in'" [src]="avatar"/>
@@ -74,7 +74,7 @@
 </div>
 
 
-<div class="chat-message" *ngIf="message.body.includes('Audio Call :')" style="margin-left: 4.0em;margin-right: 4.6em;"
+<div class="chat-message" *ngIf="message.body.includes('Audio')" style="margin-left: 4.0em;margin-right: 4.6em;"
      [ngClass]="{'chat-message--in': message.direction === 'in', 'chat-message--out': message.direction === 'out'}">
     <div *ngIf="showAvatars" class="chat-message-avatar">
         <img *ngIf="message.direction === 'in'" [src]="avatar"/>
@@ -99,6 +99,8 @@
 
     </div>
 </div>
+
+
 
 
 

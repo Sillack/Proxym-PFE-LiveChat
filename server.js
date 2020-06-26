@@ -26,7 +26,7 @@ let server = https.createServer(httpsOptions, app)
 let io = socketIO(server);
 io.on('connection', (socket) => {
     var addedUser = false;
-    console.log('user connected');
+
 
     // when the client emits 'new message', this listens and executes
     // socket.on('new-message', (data) => {

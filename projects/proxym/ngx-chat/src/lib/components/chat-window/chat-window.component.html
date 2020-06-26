@@ -3,12 +3,12 @@
     <ngx-chat-filedrop [enabled]="httpFileUploadPlugin.fileUploadSupported"
                        (fileUpload)="uploadFile($event)"
                        [dropMessage]="chatService.translations.dropMessage">
-        <div [title]="chatWindowState.contact.name" class="chat-contact-header">
-            <div class="chat-contact-avatar">
+        <div  [title]="chatWindowState.contact.name" class="chat-contact-header">
+            <div (click)="onClickHeader()" class="chat-contact-avatar">
                 <img [src]="chatWindowState.contact.avatar"/>
             </div>
 
-            <div class="chat-contact-name" style="color: white">
+            <div (click)="onClickHeader()" class="chat-contact-name" style="color: white">
                 {{chatWindowState.contact.name}}
             </div>
             <div class="chat-video-audio-call">
@@ -31,7 +31,7 @@
 
 
                 <img style="margin-right: 20px;"
-                     [src]="imgFileMessage"/>
+                     [src]="imgFileMessage" class="chat-action"/>
 
                 <img (click)="onActionClick(action)"
                      *ngFor="let action of chatService.chatActions"
@@ -45,8 +45,16 @@
         <div *ngIf="isVideoCall" class="popup-box">
             <div class="popup-content">
                 <span (click)="RejectVideoCall()" class="popup-close">&times;</span>
-                <div class="popup-header">
-                    <h4>{{callingInfo.name}}</h4>
+                <div class="popup-header" *ngIf="callingInfo.type == 'receiver'">
+                    <div  style="width: 50%; height: 50%;margin-left: 92px;">
+                        <img [src]="chatWindowState.contact.avatar" style="   border-radius: 5em;"/>
+                    </div>
+                    <h5> {{callingInfo.name.substring(0,1).toUpperCase() + callingInfo.name.substring(1) + " is " }}{{callingInfo.content}}</h5>
+                </div>
+                <div class="popup-header" *ngIf="callingInfo.type == 'dialer'">
+                    <div  style="width: 50%; height: 50%;margin-left: 45px;">
+                        <img [src]="chatWindowState.contact.avatar" style="   border-radius: 5em;"/>
+                    </div>
                     <h5>{{callingInfo.content}}</h5>
                 </div>
                 <div *ngIf="callingInfo.type == 'receiver'" style="text-align: center;">
@@ -60,8 +68,16 @@
         <div *ngIf="isAudioCall" class="popup-box">
             <div class="popup-content">
                 <span (click)="RejectAudioCall()" class="popup-close">&times;</span>
-                <div class="popup-header">
-                    <h4>{{callingInfo.name}}</h4>
+                <div class="popup-header" *ngIf="callingInfo.type == 'receiver'">
+                    <div  style="width: 50%; height: 50%;margin-left: 45px;">
+                        <img [src]="chatWindowState.contact.avatar" style="   border-radius: 5em;"/>
+                    </div>
+                    <h5> {{callingInfo.name.substring(0,1).toUpperCase() + callingInfo.name.substring(1) + " is " }}{{callingInfo.content}}</h5>
+                </div>
+                <div class="popup-header" *ngIf="callingInfo.type == 'dialer'">
+                    <div  style="width: 50%; height: 50%;margin-left: 92px;">
+                        <img [src]="chatWindowState.contact.avatar" style="   border-radius: 5em;"/>
+                    </div>
                     <h5>{{callingInfo.content}}</h5>
                 </div>
                 <div *ngIf="callingInfo.type == 'receiver'" style="text-align: center;">

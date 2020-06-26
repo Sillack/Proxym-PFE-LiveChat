@@ -1,146 +1,126 @@
-# @pazznetwork/ngx-chat [![Build status](https://api.travis-ci.com/pazznetwork/ngx-chat.svg?branch=master)](https://travis-ci.com/pazznetwork/ngx-chat) [![Coverage](https://coveralls.io/repos/github/pazznetwork/ngx-chat/badge.svg?branch=master)](https://coveralls.io/github/pazznetwork/ngx-chat)
+# Proxym-Chat-Plugin
 
-This library provides an out-of-the-box usable XMPP chat component. It is customizable and offers an API to integrate it with your application.
+This plugin provides an out-of-the-box XMPP chat component and WebRTC Video/Audio call component.
+
+![alt text](https://i.ibb.co/7VJTQ0j/archi.jpg)
 
 ## Features
-* connect to XMPP servers via websocket
-* send and receive messages
-* load messages from message history (XEP-0313)
-* use the server side buddy list or use your own data source for that, API methods for adding / removing buddies available 
-* supports multi user chat
+
+- connect to XMPP servers via websocket
+- send and receive messages
+- load messages from message history (XEP-0313)
+- One To One Video / Audio call
+- supports multi user chat
 
 ## Compatibility
-* Angular 9 (ngx-chat 0.9.x)
-* Angular 8 (ngx-chat 0.4.x)
-* Angular 6 (ngx-chat 0.3.x)
-* requires node >= 10.13 && npm >= 5 for build
 
-## Demo
-[Have a look at our demo (valid XMPP credentials required)](https://pazznetwork.github.io/ngx-chat-ghpages/) 
-![screenshot](https://user-images.githubusercontent.com/4292951/49931801-f5c3d880-fec7-11e8-8a74-6600ea2cf9b0.png)
+- Angular 9
 
-## Documentation
-Below you will find some instructions to getting started. [Have a look at the wiki for FAQ's and the API documentation.](https://github.com/pazznetwork/ngx-chat/wiki)
+- requires node >= 10.13 && npm >= 5 for build
 
-## Installation and usage
+- MySQL
 
-This instructions require Angular 9.
+## Installation
 
-First of all, install ngx-chat and its dependencies via npm:
-```bash
-npm install --save @pazznetwork/ngx-chat @xmpp/client@~0.9.2 @angular/cdk@~9.0.0
+src/app/app.component.ts
+
+```Ejabberd
+...
+
+onLogin() {
+
+const logInRequest: LogInRequest = {
+            domain: 'your_domain',
+            service: 'wss://your_domain:5280/xmpp',
+            password: this.password,
+            username: this.username,      
+};
+
+...
+```
+- Where your_domain is your Ejabberd server address, e.g : localhost.
+
+## Ejabberd server
 ```
 
-After that, import ngx-chat in your root module:
-```
-@NgModule({
-    ...
-    imports: [
-        ...
-        NgxChatModule.forRoot(),
-        BrowserAnimationsModule, // alternatively NoopAnimationsModule 
-    ],
-    ...
-})
-```
+# repository
 
-Add the `ngx-chat`-component at the end of your root component template:
-```html
-<ngx-chat></ngx-chat>
-``` 
+https://github.com/processone/ejabberd
 
-You are now ready to go. You will not see anything until you log in.
-Log in via `ngx-chat` wherever you want (e.g. in a component or a service)
- by injecting `ChatService` and calling `login`:
+# download
+
+Download from https://www.process-one.net/downloads/downloads-action.php?file=/19.02/ejabberd-19.02-linux-x64.run
 ```
-constructor(@Inject(ChatServiceToken) ChatService) {
-    chatService.logIn({
-        domain: 'ngx-chat.example',
-        service: 'wss://ngx-chat.example:5280/websocket',
-        password: 'password',
-        username: 'someuser',
-    });
-}
+```
+chmod +x ejabberd-19.02-linux-x64.run
+./ejabberd-19.02-linux-x64.run
+
+
+- change db from mnesia to mysql server 
+CREATE DATABASE ejabberd
+GRANT ALL ON ejabberd.* TO 'ejabberd'@'localhost' IDENTIFIED BY 'password'
+
+wget https://raw.githubusercontent.com/processone/ejabberd/master/sql/mysql.sql
+mysql -h localhost -D ejabberd -u ejabberd -p < mysql.sql
+
+auth_method: sql
+ejabberdctl register "testuser" "localhost" "passw0rd"
+
 ```
 
-Add the following to polyfills.ts:
 ```
-/***************************************************************************************************
- * APPLICATION IMPORTS
- */
-(window as any).global = window;
+configuration file /ejabberd/conf/ejabberd.yml :
+
+-> https://filebin.net/17k3t0ucnfayk311
+
+certfile /ejabberd/conf/server.pem :
+
+-> https://filebin.net/ap1xf1xq166gjchk
+
+ca_file /ejabberd/conf/cacert.pem :
+
+-> https://filebin.net/szz9yv9p8eoczyp8
+
 ```
+## MySQL
 
-*Optional*: body padding when roster list is expanded
-
-Add css styling like the following to your main styles.css if 
-you want to resize your main content when the roster is expanded.
-```css
-body {
-    transition-property: padding-right;
-    transition-duration: 0.4s;
-    padding-right: 0px;
-}
-
-body.has-roster {
-    padding-right: 14em;
-}
 ```
-
-## FAQ
-
-**Q: Which browsers are supported?**
-A: It is tested in Chrome, Safari and Firefox.
-
-**Q: Does ngx-chat work with self signed certificates?**
-A: Yes, if the following criteria are met:
-* the certificate has to be trusted by the browser you are using. Chrome uses the operating system trust store for certificates while Firefox has a custom implementation.
-* the common name (CN) matches the uri of the service you are connecting to 
-
-**Q: Can ngx-chat be used without the UI?**
-A: Yes. Inject the chat service via `@Inject(ChatServiceToken) public chatService: ChatService`, login via `logIn` and start sending messages via the `sendMessage` method.
-
-**Q: My question is not answered**
-A: [No problem, feel free to raise an issue](https://github.com/pazznetwork/ngx-chat/issues/new).
-
+https://raw.githubusercontent.com/processone/ejabberd/master/sql/mysql.sql
+```
 ## Development
 
-**Pull requests are welcome!**
-
-The source code for ngx-chat can be found in the `projects/pazznetwork/ngx-chat` folder.
-The demo application is in the `src` folder in the project root.  
-
-```bash
+```
 # clone this repository
+
 git clone git@github.com:pazznetwork/ngx-chat.git
-cd ngx-chat
+cd Proxym-Chat-Plugin
 
 # install dependencies
+
 npm install
 
-# will run the demo application on
-# http://localhost:4200
-ng serve
+# Build the plugin
+
+Run ng build --watch=true to build the project.The build artifacts will be stored in the dist/ directory.
+
+# will run the application on
+# https://localhost:8080
+
+node server.js
+
 ```
-
-
-### Build the plugin
-
-`npm run build-lib`
-
-### Run the plugin tests
-
-`npm run test:once`
-
-
-## Releasing
-```bash
-# increment version number in package.json
-VERSION=0.9.1 # change accordingly
-npm run changelog
-git add .
-git commit -m "docs: release $VERSION"
-git tag v$VERSION
-git push origin master --tags
-./push-release.sh
+## Run
 ```
+# run the application on
+# https://localhost:8080
+
+node server.js
+```
+# Code scaffolding
+Run ```ng generate component component-name``` to generate a new component.
+
+You can also use ```ng generate directive|pipe|service|class|guard|interface|enum|module```.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
+

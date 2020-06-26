@@ -213,6 +213,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
             .OnVideoCallRejected()
             .subscribe(data => {
                 this.callingInfo.content = 'Call Rejected ..';
+             //   this.sendStanzaVideoReject();
                 setTimeout(() => {
                     this.CloseVideo();
                 }, 1000);
@@ -223,6 +224,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
             .OnAudioCallRejected()
             .subscribe(data => {
                 this.callingInfo.content = 'Call Rejected ..';
+             //   this.sendStanzaAudioReject();
                 setTimeout(() => {
                     this.CloseAudio();
                 }, 1000);
@@ -251,7 +253,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         const calee = this.liveUserList.find(a => a.username === callee.username);
         if (calee) {
             this.socketIOService.VideoCallRequest(this.loggedUserName, calee.id);
-          //  console.log('calleeid', calee.id);
+            setTimeout(() => {
+                    this.changeDetector.detectChanges();
+                    this.RejectVideoCall();
+                }, 60000);
         }
         this.callee = callee;
         this.callingInfo.name = callee.username;
@@ -297,6 +302,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         if (calee) {
             this.socketIOService.VideoCallRejected(this.loggedUserName, calee.id);
             this.isVideoCallAccepted = false;
+            this.sendStanzaVideoReject();
         }
         this.CloseVideo();
     }
@@ -306,6 +312,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         if (calee) {
             this.socketIOService.AudioCallRejected(this.loggedUserName, calee.id);
             this.isAudioCallAccepted = false;
+            this.sendStanzaAudioReject();
         }
         this.CloseAudio();
     }
@@ -328,6 +335,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         const calee = this.liveUserList.find(a => a.username === callee.username);
         if (calee) {
             this.socketIOService.AudioCallRequest(this.loggedUserName, calee.id);
+            setTimeout(() => {
+                this.changeDetector.detectChanges();
+                this.RejectAudioCall();
+            }, 60000);
             //  console.log('calleeid', calee.id);
         }
         this.callee = callee;
@@ -378,7 +389,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.jstoday = formatDate(this.today, 'dd-MM-yyyy', 'en-US', 'CET');
         const request = '<message xml:lang=\'en\' to=\'' + this.callingInfo.name + '@localhost\'' +
             // tslint:disable-next-line:max-line-length
-            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Audio Call : ' + this.jstoday.toString() + '</body></message>';
+            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Audio Call :' + this.jstoday.toString() + '</body></message>';
         if (request) {
             this.chatServicee.chatConnectionService.send(parse(request));
         }
@@ -386,12 +397,33 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     }
 
     sendStanzaVideo() {
-        console.log('aniosss', this.callingInfo.name);
         this.GetLiveUsers();
         this.jstoday = formatDate(this.today, 'dd-MM-yyyy', 'en-US', 'CET');
         const request = '<message xml:lang=\'en\' to=\'' + this.callingInfo.name + '@localhost\'' +
             // tslint:disable-next-line:max-line-length
-            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Video Call : ' + this.jstoday.toString() + '</body></message>';
+            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Video Call :' + this.jstoday.toString() + '</body></message>';
+        if (request) {
+            this.chatServicee.chatConnectionService.send(parse(request));
+        }
+
+    }
+
+    sendStanzaAudioReject() {
+        this.jstoday = formatDate(this.today, 'dd-MM-yyyy', 'en-US', 'CET');
+        const request = '<message xml:lang=\'en\' to=\'' + this.callingInfo.name + '@localhost\'' +
+            // tslint:disable-next-line:max-line-length
+            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Missed Audio Call : ' + this.jstoday.toString() + '</body></message>';
+        if (request) {
+            this.chatServicee.chatConnectionService.send(parse(request));
+        }
+
+    }
+
+    sendStanzaVideoReject() {
+        this.jstoday = formatDate(this.today, 'dd-MM-yyyy', 'en-US', 'CET');
+        const request = '<message xml:lang=\'en\' to=\'' + this.callingInfo.name + '@localhost\'' +
+            // tslint:disable-next-line:max-line-length
+            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Missed Video Call : ' + this.jstoday.toString() + '</body></message>';
         if (request) {
             this.chatServicee.chatConnectionService.send(parse(request));
         }

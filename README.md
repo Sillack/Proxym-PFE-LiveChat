@@ -56,15 +56,8 @@ chmod +x ejabberd-19.02-linux-x64.run
 ./ejabberd-19.02-linux-x64.run
 
 
-- change db from mnesia to mysql server 
-CREATE DATABASE ejabberd
-GRANT ALL ON ejabberd.* TO 'ejabberd'@'localhost' IDENTIFIED BY 'password'
-
-wget https://raw.githubusercontent.com/processone/ejabberd/master/sql/mysql.sql
-mysql -h localhost -D ejabberd -u ejabberd -p < mysql.sql
-
 auth_method: sql
-ejabberdctl register "testuser" "localhost" "passw0rd"
+ejabberdctl register "admin" "localhost" "123789"
 
 ```
 
@@ -85,7 +78,16 @@ ca_file /ejabberd/conf/cacert.pem :
 ## MySQL
 
 ```
-https://raw.githubusercontent.com/processone/ejabberd/master/sql/mysql.sql
+
+CREATE DATABASE ejabberd
+
+GRANT ALL ON ejabberd.* TO 'ejabberd'@'localhost' IDENTIFIED BY 'password'
+
+-> https://raw.githubusercontent.com/processone/ejabberd/master/sql/mysql.sql
+
+mysql -h localhost -D ejabberd -u ejabberd -p < mysql.sql
+
+
 ```
 ## Development
 

@@ -94,7 +94,7 @@ mysql -h localhost -D ejabberd -u ejabberd -p < mysql.sql
 ```
 # clone this repository
 
-git clone git@github.com:pazznetwork/ngx-chat.git
+git clone git@github.com/Sillack/Proxym-Chat-Plugin.git
 cd Proxym-Chat-Plugin
 
 # install dependencies

@@ -39,7 +39,7 @@ export class Room {
 
     roomJid: JID;
     occupantJid: JID;
-    private messageStore: MessageStore<RoomMessage>;
+    public messageStore: MessageStore<RoomMessage>;
     name: string;
 
     constructor(occupantJid: JID, logService: LogService) {
@@ -471,7 +471,7 @@ export class MultiUserChatPlugin extends AbstractXmppPlugin {
         return true;
     }
 
-    private getRoomByJid(jid: JID) {
+    public getRoomByJid(jid: JID) {
         for (const room of this.rooms$.getValue()) {
             if (room.roomJid.equals(jid)) {
                 return room;

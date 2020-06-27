@@ -49,6 +49,7 @@ import {VideoComponent} from './components/communication/video.component';
 import {SocketIOService} from './services/socket.io.service';
 import { AudioComponent } from './components/communication/audio.component';
 import { NgxLinkPreviewModule } from '../../../../ngx-link-preview/src/lib/ngx-link-preview.module';
+import { ChatWindowRoomComponent } from './components/chat-window-room/chat-window-room.component';
 
 
 @NgModule({
@@ -79,6 +80,7 @@ import { NgxLinkPreviewModule } from '../../../../ngx-link-preview/src/lib/ngx-l
         MultiUserChatComponent,
         VideoComponent,
         AudioComponent,
+        ChatWindowRoomComponent,
     ],
     exports: [
         ChatComponent,

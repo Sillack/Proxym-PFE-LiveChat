@@ -84,6 +84,7 @@ export class AppComponent {
     Logout() {
         this.socketIOService.RemoveUser();
         sessionStorage.clear();
+        localStorage.clear();
         location.reload();
     }
 

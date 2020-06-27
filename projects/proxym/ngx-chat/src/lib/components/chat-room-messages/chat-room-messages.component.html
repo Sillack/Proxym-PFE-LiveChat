@@ -3,6 +3,7 @@
                       [message]="message"
                       [avatar]="getOrCreateContactWithFullJid(message.from).avatar"
                       [showAvatars]="true"
+                      [isRoom]="true"
                       [nick]="getOrCreateContactWithFullJid(message.from).name">
     </ngx-chat-message>
     <div class="chat-messages-empty" *ngIf="room.messages.length === 0">

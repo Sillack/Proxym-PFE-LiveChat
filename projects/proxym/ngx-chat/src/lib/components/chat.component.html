@@ -1,11 +1,16 @@
 <ngx-chat-window-list *ngIf="showChatComponent"
                       [rosterState]="rosterState">
 </ngx-chat-window-list>
+<ngx-chat-multi-user-chat *ngIf="selectedRoom" [openA]="isOpen" [name]="roomName" [selectedRoom]="selectedRoom"></ngx-chat-multi-user-chat>
+
 <ngx-chat-roster-list [rosterState]="rosterState"
                       [contacts]="contacts"
                       [contactRequestsReceived$]="contactRequestsReceived$"
                       [contactRequestsSent$]="contactRequestsSent$"
                       [contactsUnaffiliated$]="contactsUnaffiliated$"
                       *ngIf="showChatComponent"
+                      (voted)="onVoted($event)"
+                      (roomName)="onVoted1($event)"
+                      (wind)="onVoted2($event)"
                       (rosterStateChanged)="onRosterStateChanged($event)">
 </ngx-chat-roster-list>

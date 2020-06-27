@@ -44,22 +44,22 @@
         </div>
         <div *ngIf="isVideoCall" class="popup-box">
             <div class="popup-content">
-                <span (click)="RejectVideoCall()" class="popup-close">&times;</span>
+                <span *ngIf="callingInfo.type == 'dialer'" (click)="RejectVideoCall(); sendStanzaVideoReject();" class="popup-close">&times;</span>
                 <div class="popup-header" *ngIf="callingInfo.type == 'receiver'">
-                    <div  style="width: 50%; height: 50%;margin-left: 92px;">
-                        <img [src]="chatWindowState.contact.avatar" style="   border-radius: 5em;"/>
+                    <div>
+                        <img [src]="chatWindowState.contact.avatar" style="max-width: 100%;border-radius: 8em;"/>
                     </div>
                     <h5> {{callingInfo.name.substring(0,1).toUpperCase() + callingInfo.name.substring(1) + " is " }}{{callingInfo.content}}</h5>
                 </div>
                 <div class="popup-header" *ngIf="callingInfo.type == 'dialer'">
-                    <div  style="width: 50%; height: 50%;margin-left: 45px;">
-                        <img [src]="chatWindowState.contact.avatar" style="   border-radius: 5em;"/>
+                    <div>
+                        <img [src]="chatWindowState.contact.avatar" style="max-width: 100%;border-radius: 8em;"/>
                     </div>
                     <h5>{{callingInfo.content}}</h5>
                 </div>
                 <div *ngIf="callingInfo.type == 'receiver'" style="text-align: center;">
                     <button (click)="AcceptVideoCall()" class="btn btn-success btn-sm">Accept</button>
-                    <button (click)="RejectVideoCall()" class="btn btn-danger btn-sm">Reject</button>
+                    <button (click)="RejectVideoCall(); sendStanzaVideoReject();" class="btn btn-danger btn-sm">Reject</button>
                 </div>
             </div>
 
@@ -67,22 +67,22 @@
 
         <div *ngIf="isAudioCall" class="popup-box">
             <div class="popup-content">
-                <span (click)="RejectAudioCall()" class="popup-close">&times;</span>
+                <span  *ngIf="callingInfo.type == 'dialer'" (click)="RejectAudioCall(); sendStanzaAudioReject();" class="popup-close">&times;</span>
                 <div class="popup-header" *ngIf="callingInfo.type == 'receiver'">
-                    <div  style="width: 50%; height: 50%;margin-left: 45px;">
-                        <img [src]="chatWindowState.contact.avatar" style="   border-radius: 5em;"/>
+                    <div>
+                        <img [src]="chatWindowState.contact.avatar" style="max-width: 100%;border-radius: 8em;"/>
                     </div>
                     <h5> {{callingInfo.name.substring(0,1).toUpperCase() + callingInfo.name.substring(1) + " is " }}{{callingInfo.content}}</h5>
                 </div>
                 <div class="popup-header" *ngIf="callingInfo.type == 'dialer'">
-                    <div  style="width: 50%; height: 50%;margin-left: 92px;">
-                        <img [src]="chatWindowState.contact.avatar" style="   border-radius: 5em;"/>
+                    <div>
+                        <img [src]="chatWindowState.contact.avatar" style="max-width: 100%;border-radius: 8em;"/>
                     </div>
                     <h5>{{callingInfo.content}}</h5>
                 </div>
                 <div *ngIf="callingInfo.type == 'receiver'" style="text-align: center;">
                     <button (click)="AcceptAudioCall()" class="btn btn-success btn-sm">Accept</button>
-                    <button (click)="RejectAudioCall()" class="btn btn-danger btn-sm">Reject</button>
+                    <button (click)="RejectAudioCall(); sendStanzaAudioReject();" class="btn btn-danger btn-sm">Reject</button>
                 </div>
             </div>
 
@@ -99,7 +99,7 @@
 
         <div  *ngIf="isAudioCallAccepted" class="popup-box">
             <div class="popup-content">
-                <ngx-chat-audio-call (callback)="CallBackAudio($event)" *ngIf="isAudioCallAccepted" [caller]="caller"
+                <ngx-chat-audio-call [chatWindowState]="chatWindowState" (callback)="CallBackAudio($event)" *ngIf="isAudioCallAccepted" [caller]="caller"
                                      [userType]="userType">Loading
                 </ngx-chat-audio-call>
             </div>

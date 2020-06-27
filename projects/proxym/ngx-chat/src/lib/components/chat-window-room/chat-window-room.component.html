@@ -1,0 +1,40 @@
+<div  *ngIf="selectedRoom" class="chat-window">
+
+    <ngx-chat-filedrop [enabled]="httpFileUploadPlugin.fileUploadSupported"
+                       (fileUpload)="uploadFile($event)"
+                       [dropMessage]="chatService.translations.dropMessage">
+        <div  [title]="" class="chat-contact-header">
+            <div (click)="onClickHeader()" class="chat-contact-avatar">
+
+            </div>
+
+            <div (click)="onClickHeader()" class="chat-contact-name" style="color: white">
+
+            </div>
+            <div class="chat-video-audio-call">
+
+                <i  aria-hidden="true"  class="ffa fa-video-camera"  ></i>
+
+                <i aria-hidden="true" class="fa fa-phone" style="margin-left: 15px;margin-right: 10px;"></i>
+
+
+            </div>
+
+            <div class="chat-close" (click)="onClickClose()" style="color: white">
+                &times;
+            </div>
+        </div>
+
+        <div *ngIf="selectedRoom" class="chat-content" (click)="onFocus()">
+                <ngx-chat-room-messages [room]="selectedRoom"></ngx-chat-room-messages>
+            <div class="chat-input-container">
+                <ngx-chat-message-input [room]="selectedRoom"></ngx-chat-message-input>
+            </div>
+
+        </div>
+
+    </ngx-chat-filedrop>
+</div>
+
+
+

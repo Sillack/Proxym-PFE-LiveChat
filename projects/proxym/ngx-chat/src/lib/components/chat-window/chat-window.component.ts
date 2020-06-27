@@ -213,7 +213,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
             .OnVideoCallRejected()
             .subscribe(data => {
                 this.callingInfo.content = 'Call Rejected ..';
-             //   this.sendStanzaVideoReject();
                 setTimeout(() => {
                     this.CloseVideo();
                 }, 1000);
@@ -224,7 +223,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
             .OnAudioCallRejected()
             .subscribe(data => {
                 this.callingInfo.content = 'Call Rejected ..';
-             //   this.sendStanzaAudioReject();
                 setTimeout(() => {
                     this.CloseAudio();
                 }, 1000);
@@ -253,10 +251,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         const calee = this.liveUserList.find(a => a.username === callee.username);
         if (calee) {
             this.socketIOService.VideoCallRequest(this.loggedUserName, calee.id);
-            setTimeout(() => {
+           /* setTimeout(() => {
                     this.changeDetector.detectChanges();
                     this.RejectVideoCall();
-                }, 60000);
+                    this.sendStanzaVideoReject();
+                }, 30000);*/
         }
         this.callee = callee;
         this.callingInfo.name = callee.username;
@@ -302,20 +301,20 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         if (calee) {
             this.socketIOService.VideoCallRejected(this.loggedUserName, calee.id);
             this.isVideoCallAccepted = false;
-            this.sendStanzaVideoReject();
         }
         this.CloseVideo();
     }
+
 
     RejectAudioCall() {
         const calee = this.liveUserList.find(a => a.username === this.callingInfo.name);
         if (calee) {
             this.socketIOService.AudioCallRejected(this.loggedUserName, calee.id);
             this.isAudioCallAccepted = false;
-            this.sendStanzaAudioReject();
         }
         this.CloseAudio();
     }
+
     AudioCall() {
         this.GetLiveUsers();
         let mySubString = '';
@@ -335,10 +334,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         const calee = this.liveUserList.find(a => a.username === callee.username);
         if (calee) {
             this.socketIOService.AudioCallRequest(this.loggedUserName, calee.id);
-            setTimeout(() => {
+           /* setTimeout(() => {
                 this.changeDetector.detectChanges();
                 this.RejectAudioCall();
-            }, 60000);
+                this.sendStanzaAudioReject();
+            }, 30000);*/
             //  console.log('calleeid', calee.id);
         }
         this.callee = callee;

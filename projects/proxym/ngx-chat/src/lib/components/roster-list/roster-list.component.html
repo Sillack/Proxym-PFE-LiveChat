@@ -9,11 +9,12 @@
         {{ chatService.translations.chat }}
     </div>
 
+
     <ng-container>
         <div class="roster-group-header">{{chatService.translations.profile}}</div>
-
+        <h3 style="text-align: center;color: #128C7E;">{{me.substring(0,1).toUpperCase() + me.substring(1)}}</h3>
         <mat-radio-group aria-label="Select an option" class="mat-radio-group">
-            <mat-radio-button (click)="sendStanzaChat()" [checked]="true" style="padding-right: 15px; color: #69ca48"
+            <mat-radio-button (click)="sendStanzaChat()" [checked]="true" style=" color: #69ca48"
                               value="1">
                 <img [src]="imgAvailable" style="margin-right: 31px;margin-bottom: 10px;"/>
             </mat-radio-button>
@@ -56,7 +57,7 @@
         <div class="roster-group-header">{{chatService.translations.contacts}}</div>
         <div class="contact-list-wrapper">
 
-            <ngx-chat-roster-contact (click)="onClickContact(contact)"
+            <ngx-chat-roster-contact  (click)="onClickContact(contact)"
                                      *ngFor="let contact of (contacts | async)"
                                      [contact]="contact">
             </ngx-chat-roster-contact>
@@ -65,16 +66,51 @@
     </ng-container>
 
 
-    <ng-container>
+    <!--<ng-container>
+
+        <div class="room-room" *ngFor="let room of allRooms">
+            <button style="    border-radius: 16px;" >{{room.name}} </button>
+            <button class="join-room"  style="border-radius: 19px" (click)="getName(room.name);joinRoom(room.jid);">join</button>
+        </div>
+    </ng-container>-->
+
+
+    <ng-container *ngIf="me == 'ali' || me == 'mohamed' || me == 'sami'">
+
         <div class="roster-group-header">{{chatService.translations.chatRooms}}</div>
 
-        <!--     <div class="room-list-wrapper">
-                 <ngx-chat-multi-user-chat>
+        <div class="room-room" *ngFor="let room of allRooms">
 
-                 </ngx-chat-multi-user-chat>
+    <div [title]="room.name" class="roster-contact">
 
-             </div>-->
-    </ng-container>
+
+        <div class="roster-contact-name">
+            {{room.name}}
+        </div>
+        <button class="join-room"  (click)="getName(room.name);joinRoom(room.jid);">join</button>
+
+
+    </div>
+    </div>
+</ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     <ng-container *ngIf="(contactRequestsReceived$ | async).length > 0">

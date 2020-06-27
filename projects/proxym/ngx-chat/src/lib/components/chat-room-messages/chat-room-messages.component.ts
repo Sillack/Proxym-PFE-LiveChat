@@ -30,6 +30,7 @@ export class ChatRoomMessagesComponent implements OnInit, OnChanges, OnDestroy {
         this.messageSubscription = this.room.messages$.subscribe(() => {
             this.scheduleScrollToLastMessage();
         });
+        console.log("aniuys", this.room.messages);
     }
 
     ngOnChanges(changes: SimpleChanges) {

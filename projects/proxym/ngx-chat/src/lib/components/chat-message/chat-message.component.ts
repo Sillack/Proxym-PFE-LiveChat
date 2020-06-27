@@ -33,6 +33,9 @@ export class ChatMessageComponent implements OnInit {
     nick: string;
 
     @Input()
+    isRoom = false;
+
+    @Input()
     contact: Contact;
 
     imageLink: string;

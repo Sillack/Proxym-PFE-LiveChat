@@ -1,17 +1,48 @@
 <div>
 
-    <div *ngIf="(chatService.state$ | async) === 'online'; else offline">
 
-        <div *ngFor="let room of (multiUserChatPlugin.rooms$ | async)">
-            <button (click)="selectedRoom = room">
-                {{room.roomJid.bare().toString()}}
-            </button>
+
+        <div  *ngIf="selectedRoom && openA == 1" class="chat-window">
+
+
+                <div  [title]="" class="chat-contact-header">
+                    <div (click)="onClickHeader()" class="chat-contact-avatar">
+
+                    </div>
+
+                    <div (click)="onClickHeader()" style="color: white;padding: 0 0.5em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+    overflow: hidden;
+    font-weight: bold;
+    margin-left: -24px;
+    font-size: 13px;">
+                        {{name}}
+                    </div>
+                    <div class="chat-video-audio-call">
+
+                        <i  aria-hidden="true"  class="ffa fa-video-camera"  ></i>
+
+                        <i aria-hidden="true" class="fa fa-phone" style="margin-left: 15px;margin-right: 10px;"></i>
+
+
+                    </div>
+
+                    <div class="chat-close" (click)="onClickClose()" style="color: white">
+                        &times;
+                    </div>
+                </div>
+
+                <div *ngIf="selectedRoom" class="chat-content">
+                    <ngx-chat-room-messages [room]="selectedRoom"></ngx-chat-room-messages>
+                    <div class="chat-input-container">
+                        <ngx-chat-message-input [room]="selectedRoom"></ngx-chat-message-input>
+                    </div>
+
+                </div>
         </div>
-
-
-
-
-
 
 
      <!--   <div *ngFor="let room of (multiUserChatPlugin.rooms$ | async)">
@@ -36,15 +67,6 @@
 
 
 
-            <button class="all-room" (click)="queryAllRooms()">List all rooms</button>
-
-
-
-        <div class="room-room" *ngFor="let room of allRooms">
-            {{room.name}}
-            <button class="join-room" (click)="joinRoom(room.jid)">join</button>
-        </div>
-    </div>
 
     <ng-template #offline>
         <span *ngIf="(chatService.state$ | async) !== 'online'">You need to be online.</span>

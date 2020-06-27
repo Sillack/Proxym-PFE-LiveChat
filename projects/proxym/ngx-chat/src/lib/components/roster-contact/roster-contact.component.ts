@@ -21,9 +21,20 @@ export class RosterContactComponent implements OnInit, OnDestroy {
 
     unreadCount = 0;
 
+    me;
+
     private ngDestroy = new Subject<void>();
 
     constructor(@Inject(ChatServiceToken) private chatService: ChatService) {
+        this.chatService.getPlugin(UnreadMessageCountPlugin).jidToUnreadCount$
+            .pipe(
+                map(jidToUnreadCount => jidToUnreadCount[this.contact.jidBare.toString()] || 0),
+                distinctUntilChanged(),
+                debounceTime(100),
+                takeUntil(this.ngDestroy),
+            ).subscribe(unreadCount => this.unreadCount = unreadCount);
+        this.chatService.getPlugin(UnreadMessageCountPlugin).onBeforeOnline();
+        this.chatService.getPlugin(RosterPlugin).getRosterContacts();
     }
 
     ngOnInit() {
@@ -36,6 +47,8 @@ export class RosterContactComponent implements OnInit, OnDestroy {
             ).subscribe(unreadCount => this.unreadCount = unreadCount);
         this.chatService.getPlugin(UnreadMessageCountPlugin).onBeforeOnline();
         this.chatService.getPlugin(RosterPlugin).getRosterContacts();
+        this.me = sessionStorage.getItem('username');
+        console.log('prtty', this.me);
 
     }
 

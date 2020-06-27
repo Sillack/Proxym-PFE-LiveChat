@@ -1,11 +1,11 @@
 @import '../../style';
 
-@roster-width: 14em;
+@roster-width: 14em; //14
 
 * {
   box-sizing: border-box;
   margin: 0;
-  padding: 0;
+  // padding: 0;
   font-family: "Helvetica", "Arial", serif
 }
 
@@ -143,4 +143,23 @@
 
 .roster-drawer:hover .roster-drawer__button {
   color: #fff;
+}
+
+.roster-contact {
+  display: flex;
+  justify-content: space-between;
+}
+
+.roster-contact-avatar {
+  width: 2em;
+  height: 2em;
+}
+
+.roster-contact-name {
+  padding-left: 0.5em;
+  padding-top: 0.5em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  flex-grow: 1;
 }

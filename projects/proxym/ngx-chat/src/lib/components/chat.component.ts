@@ -1,9 +1,11 @@
-import {Component, Inject, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Component, Inject, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Contact} from '../core/contact';
 import {Translations} from '../core/translations';
 import {ChatService, ChatServiceToken} from '../services/chat-service';
-
+import {RosterListComponent} from '../components/roster-list/roster-list.component';
+import {Room} from '../services/adapters/xmpp/plugins/multi-user-chat.plugin';
+import {DataService} from './multi-user-chat/data.service';
 /**
  * The main UI component. Should be instantiated near the root of your application.
  *
@@ -27,6 +29,7 @@ import {ChatService, ChatServiceToken} from '../services/chat-service';
     styleUrls: ['./chat.component.less']
 })
 export class ChatComponent implements OnInit, OnChanges {
+
 
     /**
      * If supplied, translations contain an object with the structure of the Translations interface.
@@ -76,6 +79,12 @@ export class ChatComponent implements OnInit, OnChanges {
 
     showChatComponent = false;
 
+    roomName: string;
+
+    selectedRoom: Room;
+
+    isOpen: number;
+
     private defaultTranslations: Translations = {
         chat: 'Chat',
         contacts: 'Contacts',
@@ -96,8 +105,9 @@ export class ChatComponent implements OnInit, OnChanges {
         addContact: 'Add Contact',
         profile: 'My Profile',
     };
-
-    constructor(@Inject(ChatServiceToken) private chatService: ChatService) {
+    @ViewChild(RosterListComponent) child;
+    constructor(@Inject(ChatServiceToken) private chatService: ChatService,
+                @Inject(ChatServiceToken) private data: DataService) {
     }
 
     ngOnInit() {
@@ -106,8 +116,9 @@ export class ChatComponent implements OnInit, OnChanges {
         if (this.userAvatar$) {
             this.userAvatar$.subscribe(avatar => this.chatService.userAvatar$.next(avatar));
         }
-
+        // this.data.currentMessage.subscribe(message => this.selectedRoom = message);
         this.mergeAndSetTranslations();
+
     }
 
     private mergeAndSetTranslations() {
@@ -119,6 +130,12 @@ export class ChatComponent implements OnInit, OnChanges {
         if (changes.rosterState) {
             this.onRosterStateChanged(changes.rosterState.currentValue);
         }
+
+    }
+
+    countChangedHandler(selectedRoom: Room) {
+        this.selectedRoom = selectedRoom;
+
     }
 
     private onChatStateChange(state: string) {
@@ -139,5 +156,18 @@ export class ChatComponent implements OnInit, OnChanges {
             document.body.classList.remove(rosterClass);
         }
     }
+
+    onVoted($event) {
+       this.selectedRoom = $event;
+    }
+
+    onVoted1($event) {
+        this.roomName = $event;
+    }
+
+    onVoted2($event) {
+        this.isOpen = $event;
+    }
+
 
 }

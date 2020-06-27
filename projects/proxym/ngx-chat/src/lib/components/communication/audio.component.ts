@@ -1,6 +1,9 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {SocketIOService} from '../../services/socket.io.service';
 import {Router} from '@angular/router';
+import {ChatWindowState} from '../../services/chat-list-state.service';
+import {Contact} from '../../core/contact';
+import {ChatService, ChatServiceToken} from '../../services/chat-service';
 
 @Component({
   selector: 'ngx-chat-audio-call',
@@ -24,6 +27,9 @@ export class AudioComponent implements OnInit {
     this.changeDetector.detectChanges();
     this.caller = caller;
   }
+  contact: Contact;
+  @Input()
+  public chatWindowState: ChatWindowState;
 
   public userType;
   @Input('userType')
@@ -42,10 +48,10 @@ export class AudioComponent implements OnInit {
       // tslint:disable-next-line:ban-types
   callback: EventEmitter<Object> = new EventEmitter<Object>();
 
-  constructor(
-      private socketIOService: SocketIOService,
-      private router: Router,
-      private changeDetector: ChangeDetectorRef) {
+  constructor( @Inject(ChatServiceToken) public chatService: ChatService,
+               private socketIOService: SocketIOService,
+               private router: Router,
+               private changeDetector: ChangeDetectorRef) {
   }
 
   SetConnection() {

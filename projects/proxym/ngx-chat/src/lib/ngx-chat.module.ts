@@ -50,7 +50,14 @@ import {SocketIOService} from './services/socket.io.service';
 import { AudioComponent } from './components/communication/audio.component';
 import { NgxLinkPreviewModule } from '../../../../ngx-link-preview/src/lib/ngx-link-preview.module';
 import { ChatWindowRoomComponent } from './components/chat-window-room/chat-window-room.component';
-
+import { MatCarouselModule } from '@ngmodule/material-carousel';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatCardModule} from '@angular/material/card';
+import {BrowserModule} from '@angular/platform-browser';
+import {CarouselModule} from 'angular-bootstrap-md';
+import { IconsModule } from '../../../../proxym/ngx-chat/src/lib/components/icons/icons.module';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { MatVideoModule } from 'mat-video';
 
 @NgModule({
     imports: [
@@ -61,7 +68,15 @@ import { ChatWindowRoomComponent } from './components/chat-window-room/chat-wind
         MatRadioModule,
         MatSelectModule,
         NgbModule,
-        NgxLinkPreviewModule
+        NgxLinkPreviewModule,
+        MatCarouselModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        BrowserModule,
+        CarouselModule,
+        IconsModule,
+        PickerModule,
+        MatVideoModule
     ],
     declarations: [
         ChatComponent,

@@ -78,7 +78,7 @@ export class MultiUserChatComponent implements OnInit {
 
     async uploadFile(file: File) {
         const url = await this.httpFileUploadPlugin.upload(file);
-        this.chatService.sendMessage(this.chatWindowState.contact.jidBare.toString(), url);
+        this.chatService.sendMessage(sessionStorage.getItem('username') + '@localhost', url);
     }
 
     onFocus() {

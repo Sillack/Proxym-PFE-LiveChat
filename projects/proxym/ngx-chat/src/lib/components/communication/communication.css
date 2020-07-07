@@ -12,6 +12,10 @@
     height: 100%;
 }
 
+.video:first-child {
+    display: none;
+}
+
 .call-btn-div {
     position: absolute;
     bottom: 10px;

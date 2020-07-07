@@ -1,5 +1,7 @@
 <div class="container">
-
+<p *ngIf="logi == false">This page will be replaced by your application login page </p>
+ <p *ngIf="logi">This page will be replaced by your application home page </p>
+    <div *ngIf="logi == false">
     <div class="form-group">
         <div>
             Username
@@ -17,18 +19,22 @@
             <input name="password" [(ngModel)]="password" class="form-control" type="password" placeholder="Password"/>
         </div>
     </div>
-
+    </div>
     <div>
-        <button name="login" (click)="onLogin()">Log in</button>
-        <button name="logout" (click)="onLogout()">Log out</button>
-        <button (click)="onRegister()" name="register">Register</button>
+        <button *ngIf="logi == false" name="login" (click)="onLogin()">Log in</button>
+        <button *ngIf="logi" name="logout" (click)="onLogout()">Log out</button>
+       <!-- <button (click)="onRegister()" name="register">Register</button>-->
 
     </div>
-    <div>{{chatService.state$ | async}}</div>
-    <div *ngIf="registrationMessage">
+  <!--  <div *ngIf="registrationMessage">
         <p>{{registrationMessage}}</p>
-    </div>
+    </div>-->
 
 
 </div>
+
+
 <ngx-chat rosterState="shown"></ngx-chat>
+
+
+

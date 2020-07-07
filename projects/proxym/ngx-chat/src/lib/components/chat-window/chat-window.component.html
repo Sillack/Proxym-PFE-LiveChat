@@ -1,19 +1,23 @@
+<script src="../icons/icons.module.ts"></script>
+
 <div class="chat-window">
 
     <ngx-chat-filedrop [enabled]="httpFileUploadPlugin.fileUploadSupported"
                        (fileUpload)="uploadFile($event)"
                        [dropMessage]="chatService.translations.dropMessage">
-        <div  [title]="chatWindowState.contact.name" class="chat-contact-header">
-            <div (click)="onClickHeader()" class="chat-contact-avatar">
+
+        <div   class="chat-contact-header">
+            <div [title]="chatWindowState.contact.name" (click)="onClickHeader()" class="chat-contact-avatar">
                 <img [src]="chatWindowState.contact.avatar"/>
+
             </div>
 
             <div (click)="onClickHeader()" class="chat-contact-name" style="color: white">
                 {{chatWindowState.contact.name}}
             </div>
-            <div class="chat-video-audio-call">
+            <div *ngIf="!chatWindowState.isCollapsed" class="chat-video-audio-call">
 
-                <i  aria-hidden="true"  class="ffa fa-video-camera" (click)="VideoCall()" ></i>
+                <i  aria-hidden="true"  class="ffa fa-video-camera" (click)="VideoCall(); playAudio();" ></i>
 
                 <i aria-hidden="true" class="fa fa-phone" (click)="AudioCall()" style="margin-left: 15px;margin-right: 10px;"></i>
 
@@ -25,10 +29,27 @@
             </div>
         </div>
         <div *ngIf="!chatWindowState.isCollapsed" class="chat-content" (click)="onFocus()">
-            <ngx-chat-message-list [contact]="chatWindowState.contact" [showAvatars]="false"></ngx-chat-message-list>
-            <div class="chat-input-container">
-                <ngx-chat-message-input [contact]="chatWindowState.contact"></ngx-chat-message-input>
 
+            <ngx-chat-message-list [contact]="chatWindowState.contact" [showAvatars]="false"></ngx-chat-message-list>
+            <emoji-mart class="emoji-mart" set="emojione" (emojiSelect)="addEmoji($event)" *ngIf="showEmojiPicker" title=""></emoji-mart>
+
+        </div>
+            <div *ngIf="!chatWindowState.isCollapsed"  class="chat-input-container">
+                <ngx-chat-message-input [emoji]="message" [contact]="chatWindowState.contact"></ngx-chat-message-input>
+
+                <button style="padding: 0;
+    margin-top: -3px;
+    background-color: white;
+    color: gray;
+    border-color: white;
+    size: -4px;
+    font-size: 16px;
+    margin-right: 14px;"
+                        type="button"
+                        class="toggle-emoji"
+                        (click)="toggleEmojiPicker()">
+                         <i-feather name="smile"></i-feather>
+                </button>
 
                 <img style="margin-right: 20px;"
                      [src]="imgFileMessage" class="chat-action"/>
@@ -39,9 +60,10 @@
                      [src]="imgSendMessage"
                      class="chat-action"/>
 
-
             </div>
-        </div>
+
+
+
         <div *ngIf="isVideoCall" class="popup-box">
             <div class="popup-content">
                 <span *ngIf="callingInfo.type == 'dialer'" (click)="RejectVideoCall(); sendStanzaVideoReject();" class="popup-close">&times;</span>
@@ -62,7 +84,6 @@
                     <button (click)="RejectVideoCall(); sendStanzaVideoReject();" class="btn btn-danger btn-sm">Reject</button>
                 </div>
             </div>
-
         </div>
 
         <div *ngIf="isAudioCall" class="popup-box">
@@ -108,5 +129,7 @@
 
     </ngx-chat-filedrop>
 </div>
+
+
 
 

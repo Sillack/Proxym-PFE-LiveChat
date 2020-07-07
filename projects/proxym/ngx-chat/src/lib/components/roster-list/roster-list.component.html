@@ -12,7 +12,11 @@
 
     <ng-container>
         <div class="roster-group-header">{{chatService.translations.profile}}</div>
-        <h3 style="text-align: center;color: #128C7E;">{{me.substring(0,1).toUpperCase() + me.substring(1)}}</h3>
+        <img [src]="sanatizeUrl(generatedImage)" style="max-width: 50%;
+    border-radius: 8em;
+    align-self: center;">
+        <!--<h3 style="text-align: center;color: #128C7E;">{{me.substring(0,1).toUpperCase() + me.substring(1)}}</h3>-->
+       <h3 style="text-align: center;color: #128C7E;">{{this.nickname}}</h3>
         <mat-radio-group aria-label="Select an option" class="mat-radio-group">
             <mat-radio-button (click)="sendStanzaChat()" [checked]="true" style=" color: #69ca48"
                               value="1">
@@ -34,10 +38,10 @@
 
 
     </ng-container>
-    <ng-container>
+    <ng-container *ngIf="(me != 'anis') && (me != 'amani') && (me != 'maha')" >
         <div class="roster-group-header">{{chatService.translations.addContact}}</div>
 
-        <div class="add-contacts">
+        <div  class="add-contacts">
 
             <input [(ngModel)]="otherJid" placeholder="  username"
                    type="text"/>
@@ -75,7 +79,7 @@
     </ng-container>-->
 
 
-    <ng-container *ngIf="me == 'ali' || me == 'mohamed' || me == 'sami'">
+    <ng-container *ngIf="(me != 'anis') && (me != 'amani') && (me != 'maha')">
 
         <div class="roster-group-header">{{chatService.translations.chatRooms}}</div>
 

@@ -216,7 +216,7 @@ export class RosterPlugin extends AbstractXmppPlugin {
                                 mySubString.toString().lastIndexOf(',') + 1,
                                 mySubString.toString().lastIndexOf('=') + 1
                             );
-                            contact.avatar = 'data:image/png;base64,' + mySubb;
+                            contact.avatar = 'data:image/jpeg;base64,' + mySubb;
                         } else {
                             contact.avatar = dummyAvatar;
                         }

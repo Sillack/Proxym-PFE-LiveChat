@@ -1,5 +1,4 @@
-<div *ngIf="((contact.name != 'Sami Agent' &&  contact.name != 'sami@localhost' ) && me == 'amani') || (contact.name != 'Mohamed Agent' && me == 'anis') || (contact.name != 'Ali Agent' && me == 'maha')
- || me == 'sami' || me == 'mohamed' || me == 'ali'" [title]="contact.name" class="roster-contact">
+<div class="roster-contact">
 
     <div class="roster-contact-avatar">
         <img [src]="contact.avatar"/>

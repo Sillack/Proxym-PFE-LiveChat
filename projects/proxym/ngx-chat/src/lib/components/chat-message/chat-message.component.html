@@ -1,10 +1,10 @@
-<div class="chat-message" *ngIf="!message.body.includes('Audio Call :') && !message.body.includes('Video Call :') " style="margin-right: 0.6em;"
+<div class="chat-message" *ngIf="!message.body.includes('Video Call:') && !message.body.includes('Audio Call:') && !message.body.includes('Video call:') && !message.body.includes('Audio call:')" style="margin-right: 0.6em;"
      [ngClass]="{'chat-message--in': message.direction === 'in', 'chat-message--out': message.direction === 'out'}">
     <div *ngIf="showAvatars" class="chat-message-avatar">
         <img *ngIf="message.direction === 'in'" [src]="avatar"/>
         <img *ngIf="message.direction === 'out'" [src]="chatService.userAvatar$ | async"/>
     </div>
-    <div *ngIf="isRoom == true"   style="     margin-top: 10px;
+    <div *ngIf="isRoom == true && !message.body.toString().includes('https://www.uib-net.com/#/app/public/offre/content')"   style="margin-top: 10px;
 ;
   padding: 0.5em 0.5em 0em 0.5em;     margin-bottom: 10px;
 
@@ -13,12 +13,22 @@
 
     </div>
 
-    <div *ngIf="isRoom == false" class="chat-message-text" [ngClass]="{'chat-message-text--no-avatar':!showAvatars}">
+    <div *ngIf="isRoom == false && !imageLink && !message.body.toString().includes('.mp4') && !message.body.toString().includes('https://www.uib-net.com/#/app/public/offre/content')" class="chat-message-text" [ngClass]="{'chat-message-text--no-avatar':!showAvatars}">
         <span [ngxChatLinks]="message.body"></span>
 
     </div>
+    <div *ngIf=" message.body.toString().includes('.mp4') " class="chat-message-text" [ngClass]="{'chat-message-text--no-avatar':!showAvatars}">
+        <span [ngxChatLinks]="message.body"></span>
+        <mat-video [overlay]="true" [playsinline]="false" [fullscreen]="false"  [src]="message.body"></mat-video>
+    </div>
+
+    <div *ngIf="message.body.toString().includes('https://www.uib-net.com/#/app/public/offre/content')" class="chat-message-text" [ngClass]="{'chat-message-text--no-avatar':!showAvatars}">
+
+        <mdb-carousel class="carousel slide carousel-fade" [animation]="'fade'"> <mdb-carousel-item> <div class="view w-100"> <img class="d-block w-100" src="https://net.uib.com.tn/UIB-OC-BO/uploads/offers/-Carte-Platinum-_list_436564861868214.jpg" alt="Carte Platinum"> <div class="mask rgba-black-light waves-light" mdbWavesEffect></div> </div> <div class="carousel-caption"> <h5 class="h3-responsive">Carte Platinum</h5> <p style="margin-bottom: -1px; ">Accédez à la classe PLATINUM.</p> </div> </mdb-carousel-item> <mdb-carousel-item> <div class="view w-100"> <img class="d-block w-100" src="https://net.uib.com.tn/UIB-OC-BO/uploads/offers/-Compte-PLATINE_list_435802979778582.jpg" alt="Compte PLATINE"> <div class="mask rgba-black-strong waves-light" mdbWavesEffect></div> </div> <div class="carousel-caption"> <h5 class="h3-responsive">Compte PLATINE</h5> <p style="margin-bottom: -1px; ">A la hauteur de vos ambitions.</p> </div> </mdb-carousel-item> <mdb-carousel-item> <div class="view w-100"> <img class="d-block w-100" src="https://net.uib.com.tn/UIB-OC-BO/uploads/offers/Pack--PLATINE_list_435234346016342.jpg" alt="Pack  PLATINE"> <div class="mask rgba-black-slight waves-light" mdbWavesEffect></div> </div> <div class="carousel-caption"> <h5 class="h3-responsive">Pack  PLATINE</h5> <p style="margin-bottom: -1px; ">La clé de tous les privilèges.</p> </div> </mdb-carousel-item> </mdb-carousel>
+
+    </div>
     <div class="chat-message-image-wrapper" *ngIf="imageLink">
-        <img class="chat-message-image" [src]="imageLink"/>
+       <a [href]="message.body"><img class="chat-message-image" [src]="imageLink"/></a>
     </div>
     <div class="chat-message-footer">
         <small class="chat-message-datetime">{{message.datetime | date:chatService.translations.timeFormat}}</small>
@@ -96,7 +106,7 @@
 </div>
 
 
-<div class="chat-message" *ngIf="message.body.includes('Video')" style="margin-left: 4.0em;margin-right: 4.6em;"
+<div class="chat-message" *ngIf="message.body.includes('call')" style="margin-left: 4.0em;margin-right: 4.6em;"
      [ngClass]="{'chat-message--in': message.direction === 'in', 'chat-message--out': message.direction === 'out'}">
     <div *ngIf="showAvatars" class="chat-message-avatar">
         <img *ngIf="message.direction === 'in'" [src]="avatar"/>
@@ -110,7 +120,7 @@
     </div>
     <div class="chat-message-footer">
         <small class="chat-message-datetime">{{message.datetime | date:chatService.translations.timeFormat}}</small>
-        <img [src]="imgVideo"  class="chat-message-avatar" style="width: 32%; height: 32%; margin-left: 18px; margin-top: -8px;" />
+        <img [src]="imgDec"  class="chat-message-avatar" style="width: 32%; height: 32%; margin-left: 18px; margin-top: -8px;" />
         <small title="{{nick}}" class="chat-message-name">
 
 
@@ -121,7 +131,7 @@
 </div>
 
 
-<div class="chat-message" *ngIf="message.body.includes('Audio')" style="margin-left: 4.0em;margin-right: 4.6em;"
+<div class="chat-message" *ngIf="message.body.substring(0,1) == 'A' || message.body.substring(0,1) == 'V' " style="margin-left: 4.0em;margin-right: 4.6em;"
      [ngClass]="{'chat-message--in': message.direction === 'in', 'chat-message--out': message.direction === 'out'}">
     <div *ngIf="showAvatars" class="chat-message-avatar">
         <img *ngIf="message.direction === 'in'" [src]="avatar"/>
@@ -136,7 +146,7 @@
     </div>
     <div class="chat-message-footer">
         <small class="chat-message-datetime">{{message.datetime | date:chatService.translations.timeFormat}}</small>
-        <img [src]="imgAudio"  class="chat-message-avatar" style="width: 32%; height: 32%; margin-left: 18px; margin-top: -8px;" />
+        <img [src]="imgAcc"  class="chat-message-avatar" style="width: 32%; height: 32%; margin-left: 18px; margin-top: -8px;" />
 
         <small title="{{nick}}" class="chat-message-name">
 

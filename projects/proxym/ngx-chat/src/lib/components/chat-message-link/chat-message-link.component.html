@@ -1,5 +1,5 @@
 <a href="{{link}}" target="_blank" rel="noopener" (click)="onClick($event)">{{text}}</a>
-<div *ngIf="link.includes('.com') || link.includes('.fr') ">
+<div *ngIf="(link.includes('.com') || link.includes('.fr') ) && !link.includes('https://www.uib-net.com/#/app/public/offre/content') ">
 <ngx-link-preview
                   apiRoute="demo"
                   [links]="links"
@@ -7,7 +7,10 @@
 </ngx-link-preview>
 </div>
 
-<div *ngIf="!link.includes('.jpg') && !link.includes('.png') && !link.includes('.jpeg') && !link.includes('.com') && !link.includes('.fr')">
-    <img [src]="imgFile" style="max-width: 73px;"/>
+<div *ngIf="!link.includes('.jpg') && !link.includes('.png') && !link.includes('.jpeg') && !link.includes('.com') && !link.includes('.fr') &&
+!link.includes('.mp4')">
+    <a href="{{link}}" target="_blank" rel="noopener" (click)="onClick($event)">  <img [src]="imgFile" style="max-width: 73px;"/></a>
 
 </div>
+
+

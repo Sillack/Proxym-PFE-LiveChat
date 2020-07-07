@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, Input, OnChanges, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 import {Direction} from '../../core/message';
@@ -18,7 +18,7 @@ import {formatDate } from '@angular/common';
     templateUrl: './chat-window.component.html',
     styleUrls: ['./chat-window.component.less']
 })
-export class ChatWindowComponent implements OnInit, OnDestroy {
+export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
 
     public loggedUserName;
     public isChat = false;
@@ -35,7 +35,11 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
     public video;
     contact: Contact;
 
+    public message = '';
+
     presence = Presence;
+
+    showEmojiPicker = false;
 
     @Input()
     public chatWindowState: ChatWindowState;
@@ -81,6 +85,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.OnAudioCallRequest();
         this.OnAudioCallAccepted();
         this.OnAudioCallRejected();
+    }
+
+    ngOnChanges() {
+        this.message = '';
     }
 
     ngOnDestroy() {
@@ -153,6 +161,16 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
                 this.callingInfo.type = 'receiver';
                 this.isVideoCall = true;
             });
+    }
+
+    toggleEmojiPicker() {
+        this.showEmojiPicker = !this.showEmojiPicker;
+    }
+
+    addEmoji(event) {
+        const { message } = this;
+        const text = `${event.emoji.native}`;
+        this.message = text;
     }
 
     OnAudioCallRequest() {
@@ -378,6 +396,13 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    playAudio() {
+        const audio = new Audio();
+        audio.src = '../../../../../../../src/assets/ringtone.wav';
+        audio.load();
+        audio.play();
+    }
+
     Logout() {
         this.socketIOService.RemoveUser();
         sessionStorage.clear();
@@ -389,7 +414,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.jstoday = formatDate(this.today, 'dd-MM-yyyy', 'en-US', 'CET');
         const request = '<message xml:lang=\'en\' to=\'' + this.callingInfo.name + '@localhost\'' +
             // tslint:disable-next-line:max-line-length
-            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Audio Call :' + this.jstoday.toString() + '</body></message>';
+            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Audio Call: ' + this.jstoday.toString() + '</body></message>';
         if (request) {
             this.chatServicee.chatConnectionService.send(parse(request));
         }
@@ -401,7 +426,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.jstoday = formatDate(this.today, 'dd-MM-yyyy', 'en-US', 'CET');
         const request = '<message xml:lang=\'en\' to=\'' + this.callingInfo.name + '@localhost\'' +
             // tslint:disable-next-line:max-line-length
-            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Video Call :' + this.jstoday.toString() + '</body></message>';
+            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Video Call: ' + this.jstoday.toString() + '</body></message>';
         if (request) {
             this.chatServicee.chatConnectionService.send(parse(request));
         }
@@ -412,7 +437,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.jstoday = formatDate(this.today, 'dd-MM-yyyy', 'en-US', 'CET');
         const request = '<message xml:lang=\'en\' to=\'' + this.callingInfo.name + '@localhost\'' +
             // tslint:disable-next-line:max-line-length
-            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Missed Audio Call : ' + this.jstoday.toString() + '</body></message>';
+            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + ' Audio call: ' + this.jstoday.toString() + '</body></message>';
         if (request) {
             this.chatServicee.chatConnectionService.send(parse(request));
         }
@@ -423,7 +448,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
         this.jstoday = formatDate(this.today, 'dd-MM-yyyy', 'en-US', 'CET');
         const request = '<message xml:lang=\'en\' to=\'' + this.callingInfo.name + '@localhost\'' +
             // tslint:disable-next-line:max-line-length
-            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + 'Missed Video Call : ' + this.jstoday.toString() + '</body></message>';
+            ' type=\'chat\' xmlns=\'jabber:client\'>' + '<origin-id xmlns=\'urn:xmpp:sid:0\' id=\'' +  this.chatServicee.chatConnectionService.getNextIqId() + '\' /><body>' + ' Video call: ' + this.jstoday.toString() + '</body></message>';
         if (request) {
             this.chatServicee.chatConnectionService.send(parse(request));
         }

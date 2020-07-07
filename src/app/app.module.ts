@@ -8,6 +8,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AppComponent} from './app.component';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatCarouselModule} from '@ngmodule/material-carousel';
+import { CarouselModule, WavesModule } from 'angular-bootstrap-md';
+import { IconsModule } from '../../projects/proxym/ngx-chat/src/lib/components/icons/icons.module';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { MatVideoModule } from 'mat-video';
 
 @NgModule({
     declarations: [
@@ -22,6 +27,12 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
         MatSelectModule,
         NgbModule,
         MatSnackBarModule,
+        MatCarouselModule,
+        CarouselModule,
+        WavesModule,
+        IconsModule,
+        PickerModule,
+        MatVideoModule
     ],
     providers: [],
     bootstrap: [AppComponent]

@@ -7,6 +7,11 @@
   font-family: "Helvetica", "Arial", serif
 }
 
+.emoji-mart {
+  width: 20em;
+  height: 9em;
+}
+
 .chat-window {
   border: 1px solid @general-border-color;
   border-bottom: none;
@@ -80,8 +85,8 @@
 }
 
 .chat-content {
-  background-color: #ECE5DD;
-  // background-image: url("https://i.imgur.com/TnNwdvV.png");
+ // background-color: #ECE5DD;
+   background-image: url("https://i.pinimg.com/originals/7b/1d/8e/7b1d8e865da2c11b788a21a0fb51d542.jpg");
   text-align: left;
   padding: 0;
   min-height: 5em;
@@ -118,4 +123,35 @@
 
 ngx-chat-message-input {
   flex-grow: 1;
+}
+
+.roster-presence {
+  display: inline-block;
+  padding-top: 0.5em;
+  //margin-left: 0.3em;
+
+  &.roster-presence--present {
+    color: @success;
+    font-size: 20px;
+  }
+
+  &.roster-presence--away {
+    color: @warning;
+    font-size: 20px;
+  }
+
+  &.roster-presence--dnd {
+    color: @danger;
+    font-size: 20px;
+  }
+
+  &.roster-presence--unavailable {
+    color: #dadada;
+    font-size: 20px;
+  }
+}
+
+.roster-contact-status {
+  white-space: nowrap;
+  margin-top: 5px;
 }

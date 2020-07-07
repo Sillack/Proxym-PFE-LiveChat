@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {Contact} from '../../core/contact';
 import {MultiUserChatPlugin, Room} from '../../services/adapters/xmpp/plugins/multi-user-chat.plugin';
 import {ChatService, ChatServiceToken} from '../../services/chat-service';
@@ -8,7 +8,7 @@ import {ChatService, ChatServiceToken} from '../../services/chat-service';
     templateUrl: './chat-message-input.component.html',
     styleUrls: ['./chat-message-input.component.less']
 })
-export class ChatMessageInputComponent implements OnInit {
+export class ChatMessageInputComponent implements OnInit, OnChanges {
 
     @Input()
     public contact: Contact;
@@ -21,12 +21,18 @@ export class ChatMessageInputComponent implements OnInit {
     @ViewChild('chatInput')
     chatInput: ElementRef;
 
+    @Input()
+    emoji;
+
+
     constructor(@Inject(ChatServiceToken) public chatService: ChatService) {
     }
-
-    ngOnInit() {
+    ngOnChanges() {
+        this.message = this.message + this.emoji;
     }
+    ngOnInit() {
 
+    }
     onSendMessage() {
         if (this.message.trim().length > 0) {
             if (this.room) {
@@ -38,6 +44,7 @@ export class ChatMessageInputComponent implements OnInit {
         }
         return false;
     }
+
 
     focus() {
         this.chatInput.nativeElement.focus();

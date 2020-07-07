@@ -30,7 +30,6 @@ body.has-roster {
 }
 
 button {
-    padding: 0.5em;
     border: 1px solid #128C7E;;
     background-color: #128C7E;;
     color: #fff;
@@ -87,3 +86,10 @@ button {
     cursor: pointer;
 }
 
+.progress {
+    visibility: hidden;
+}
+
+.videoplayer {
+    margin-bottom: 10px;
+}

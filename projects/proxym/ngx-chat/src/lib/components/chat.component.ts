@@ -6,6 +6,10 @@ import {ChatService, ChatServiceToken} from '../services/chat-service';
 import {RosterListComponent} from '../components/roster-list/roster-list.component';
 import {Room} from '../services/adapters/xmpp/plugins/multi-user-chat.plugin';
 import {DataService} from './multi-user-chat/data.service';
+import {
+    MatCarouselSlideComponent,
+    Orientation
+} from '@ngmodule/material-carousel';
 /**
  * The main UI component. Should be instantiated near the root of your application.
  *
@@ -85,6 +89,7 @@ export class ChatComponent implements OnInit, OnChanges {
 
     isOpen: number;
 
+
     private defaultTranslations: Translations = {
         chat: 'Chat',
         contacts: 'Contacts',
@@ -109,6 +114,7 @@ export class ChatComponent implements OnInit, OnChanges {
     constructor(@Inject(ChatServiceToken) private chatService: ChatService,
                 @Inject(ChatServiceToken) private data: DataService) {
     }
+
 
     ngOnInit() {
         this.chatService.state$.subscribe($e => this.onChatStateChange($e));

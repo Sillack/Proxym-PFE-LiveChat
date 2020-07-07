@@ -1,9 +1,9 @@
-<div>
-
 
 
         <div  *ngIf="selectedRoom && openA == 1" class="chat-window">
-
+            <ngx-chat-filedrop [enabled]="httpFileUploadPlugin.fileUploadSupported"
+                               (fileUpload)="uploadFile($event)"
+                               [dropMessage]="chatService.translations.dropMessage">
 
                 <div  [title]="" class="chat-contact-header">
                     <div (click)="onClickHeader()" class="chat-contact-avatar">
@@ -42,6 +42,7 @@
                     </div>
 
                 </div>
+            </ngx-chat-filedrop>
         </div>
 
 
@@ -67,8 +68,3 @@
 
 
 
-
-    <ng-template #offline>
-        <span *ngIf="(chatService.state$ | async) !== 'online'">You need to be online.</span>
-    </ng-template>
-</div>

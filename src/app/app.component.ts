@@ -10,6 +10,7 @@ import {RegistrationPlugin} from '../../projects/proxym/ngx-chat/src/lib/service
 import {UnreadMessageCountPlugin} from '../../projects/proxym/ngx-chat/src/lib/services/adapters/xmpp/plugins/unread-message-count.plugin';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {SocketIOService} from 'projects/proxym/ngx-chat/src/lib/services/socket.io.service';
+import {Orientation} from '@ngmodule/material-carousel';
 
 @Component({
     selector: 'app-root',
@@ -26,6 +27,35 @@ export class AppComponent {
     public multiUserChatPlugin: MultiUserChatPlugin;
     public unreadMessageCountPlugin: UnreadMessageCountPlugin;
     public registrationMessage: string;
+
+
+    public slidesList = new Array<never>(5);
+    public showContent = false;
+    // public listKeyManager: ListKeyManager<any>;
+    public timings = '300ms ease-in';
+    public autoplay = true;
+    public interval = 4000;
+    public loop = true;
+    public hideArrows = true;
+    public hideIndicators = false;
+    // public color: ThemePalette = 'accent';
+    public maxWidth = 'auto';
+    public proportion = 10;
+    public logi = false;
+    hide = true;
+    public images = [
+        {
+            image: 'assets/video_call.png',
+        } ];
+
+    public slides: any = this.chunk(this.images, 3);
+
+
+    public hideOverlay = false;
+    public useKeyboard = true;
+    public useMouseWheel = false;
+    public orientation: Orientation = 'ltr';
+    public log: string[] = [];
 
     constructor(@Inject(ChatServiceToken) public chatService: ChatService,
                 private contactFactory: ContactFactoryService,
@@ -50,6 +80,31 @@ export class AppComponent {
         window.chatService = chatService;
     }
 
+
+    public onChange(index: number) {
+        this.log.push(`MatCarousel#change emitted with index ${index}`);
+    }
+    /* public get currentIndex(): number {
+         if (this.listKeyManager) {
+             return this.listKeyManager.activeItemIndex;
+         }
+
+         return 0;
+     }*/
+
+    chunk(arr, chunkSize) {
+        let R = [];
+        for (let i = 0, len = arr.length; i < len; i += chunkSize) {
+            R.push(arr.slice(i, i + chunkSize));
+        }
+        return R;
+    }
+
+
+
+
+
+
     AddUser() {
         this.socketIOService.SetUserName(this.loggedUserName)
             .subscribe(data => {
@@ -71,14 +126,17 @@ export class AppComponent {
         this.chatService.logIn(logInRequest);
         this.loggedUserName = sessionStorage.getItem('username');
         this.AddUser();
+        this.logi = true;
     }
 
     onLogout() {
         this.chatService.logOut();
         this.socketIOService.RemoveUser();
         sessionStorage.clear();
-        location.reload();
+        this.logi = false;
+       // location.reload();
         localStorage.clear();
+
     }
 
     Logout() {

@@ -17,9 +17,9 @@
             </div>
             <div *ngIf="!chatWindowState.isCollapsed" class="chat-video-audio-call">
 
-                <i  aria-hidden="true"  class="ffa fa-video-camera" (click)="VideoCall(); playAudio();" ></i>
+                <i  aria-hidden="true"  class="ffa fa-video-camera" (click)="VideoCall(); playRing();" ></i>
 
-                <i aria-hidden="true" class="fa fa-phone" (click)="AudioCall()" style="margin-left: 15px;margin-right: 10px;"></i>
+                <i aria-hidden="true" class="fa fa-phone" (click)="AudioCall();playRing();" style="margin-left: 15px;margin-right: 10px;"></i>
 
 
             </div>
@@ -61,12 +61,8 @@
                      class="chat-action"/>
 
             </div>
-
-
-
-        <div *ngIf="isVideoCall" class="popup-box">
+        <div *ngIf="isVideoCall && chatWindowState.contact.name.toLowerCase().includes(callingInfo.name.toString().toLowerCase())" class="popup-box">
             <div class="popup-content">
-                <span *ngIf="callingInfo.type == 'dialer'" (click)="RejectVideoCall(); sendStanzaVideoReject();" class="popup-close">&times;</span>
                 <div class="popup-header" *ngIf="callingInfo.type == 'receiver'">
                     <div>
                         <img [src]="chatWindowState.contact.avatar" style="max-width: 100%;border-radius: 8em;"/>
@@ -78,15 +74,16 @@
                         <img [src]="chatWindowState.contact.avatar" style="max-width: 100%;border-radius: 8em;"/>
                     </div>
                     <h5>{{callingInfo.content}}</h5>
+                    <button (click)="RejectVideoCall();sendStanzaVideoReject();" class="btn btn-sm btn-danger end-call-btn"><i class="fa fa-phone"></i></button>
                 </div>
                 <div *ngIf="callingInfo.type == 'receiver'" style="text-align: center;">
-                    <button (click)="AcceptVideoCall()" class="btn btn-success btn-sm">Accept</button>
-                    <button (click)="RejectVideoCall(); sendStanzaVideoReject();" class="btn btn-danger btn-sm">Reject</button>
+                    <button (click)="AcceptVideoCall();" class="btn btn-success btn-sm">Accept</button>
+                    <button (click)="RejectVideoCall();sendStanzaVideoReject();" class="btn btn-danger btn-sm">Reject</button>
                 </div>
             </div>
         </div>
 
-        <div *ngIf="isAudioCall" class="popup-box">
+        <div *ngIf="isAudioCall  && chatWindowState.contact.name.toLowerCase().includes(callingInfo.name.toString().toLowerCase())" class="popup-box">
             <div class="popup-content">
                 <span  *ngIf="callingInfo.type == 'dialer'" (click)="RejectAudioCall(); sendStanzaAudioReject();" class="popup-close">&times;</span>
                 <div class="popup-header" *ngIf="callingInfo.type == 'receiver'">
@@ -128,6 +125,7 @@
         </div>
 
     </ngx-chat-filedrop>
+
 </div>
 
 

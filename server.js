@@ -3,7 +3,7 @@ let app = express();
 const fs = require('fs');
 let https = require('https');
 let path = require('path');
-app.use(express.static(__dirname + '/dist/chat-conference-plugin'));
+app.use(express.static(__dirname + '/www'));
 app.get('/*', (req, res) => res.sendFile(path.join(__dirname)));
 const httpsOptions = {
     key: fs.readFileSync('./security/cert.key'),
@@ -20,9 +20,7 @@ var clients = [];
 var busyUsers = [];
 var numUsers = 0;
 let server = https.createServer(httpsOptions, app)
-    .listen(port, () => {
-        console.log('server running at ' + port)
-    });
+    .listen(port, '0.0.0.0');
 let io = socketIO(server);
 io.on('connection', (socket) => {
     var addedUser = false;

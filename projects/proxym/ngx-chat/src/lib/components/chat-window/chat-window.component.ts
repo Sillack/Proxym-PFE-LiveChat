@@ -35,9 +35,15 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
     public video;
     contact: Contact;
 
+    public loppRing = true;
+
+    myAudio = new Audio('https://audio.jukehost.co.uk/waQVQiqBy7Jc6kBgtHVwQ9zO2OeF7rzm');
+
     public message = '';
 
     presence = Presence;
+
+    public busyy = false;
 
     showEmojiPicker = false;
 
@@ -153,6 +159,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
             });
     }
     OnVideoCallRequest() {
+        this.loppRing = true;
         this.socketIOService
             .OnVideoCallRequest()
             .subscribe(data => {
@@ -184,6 +191,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
             });
     }
     OnVideoCallAccepted() {
+        this.myAudio.pause();
         this.socketIOService
             .OnVideoCallAccepted()
             .subscribe(data => {
@@ -198,7 +206,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
             });
     }
     OnAudioCallAccepted() {
-
+        this.myAudio.pause();
         this.socketIOService
             .OnAudioCallAccepted()
             .subscribe(data => {
@@ -227,16 +235,20 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
             });
     }
     OnVideoCallRejected() {
+        this.myAudio.pause();
         this.socketIOService
             .OnVideoCallRejected()
             .subscribe(data => {
                 this.callingInfo.content = 'Call Rejected ..';
+                this.loppRing = false;
+                this.myAudio.pause();
                 setTimeout(() => {
                     this.CloseVideo();
                 }, 1000);
             });
     }
     OnAudioCallRejected() {
+        this.myAudio.pause();
         this.socketIOService
             .OnAudioCallRejected()
             .subscribe(data => {
@@ -251,6 +263,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     VideoCall() {
+        this.loppRing = true;
         this.GetLiveUsers();
         let mySubString = '';
         if (this.chatWindowState.contact.name.indexOf('@') > 0) {
@@ -281,6 +294,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
         this.callingInfo.content = 'Dialing....';
         this.callingInfo.type = 'dialer';
         this.isVideoCall = true;
+        this.socketIOService.BusyNow();
+        this.busyy = true;
+    }
+
+    changeLoop() {
+        this.loppRing = false;
     }
 
     ChangeVideo() {
@@ -292,6 +311,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     AcceptVideoCall() {
+        this.myAudio.pause();
         const calee = this.liveUserList.find(a => a.username === this.callingInfo.name);
         if (calee) {
             this.socketIOService.VideoCallAccepted(this.loggedUserName, calee.id);
@@ -303,6 +323,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
         this.CloseVideo();
     }
     AcceptAudioCall() {
+        this.myAudio.pause();
         const calee = this.liveUserList.find(a => a.username === this.callingInfo.name);
         if (calee) {
             this.socketIOService.AudioCallAccepted(this.loggedUserName, calee.id);
@@ -315,16 +336,21 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     RejectVideoCall() {
+        this.myAudio.pause();
+        this.isVideoCall = false;
         const calee = this.liveUserList.find(a => a.username === this.callingInfo.name);
         if (calee) {
             this.socketIOService.VideoCallRejected(this.loggedUserName, calee.id);
             this.isVideoCallAccepted = false;
+
         }
+
         this.CloseVideo();
     }
 
 
     RejectAudioCall() {
+        this.myAudio.pause();
         const calee = this.liveUserList.find(a => a.username === this.callingInfo.name);
         if (calee) {
             this.socketIOService.AudioCallRejected(this.loggedUserName, calee.id);
@@ -374,7 +400,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
         this.isAudioCall = false;
         this.isVideoCallAccepted = false;
         this.changeDetector.detectChanges();
-        location.reload();
+        // location.reload();
     }
 
     CallBackAudio(event) {
@@ -383,15 +409,17 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
         this.isAudioCall = false;
         this.isAudioCallAccepted = false;
         this.changeDetector.detectChanges();
-        location.reload();
+       // location.reload();
     }
 
     CloseVideo() {
+        this.myAudio.pause();
         this.isVideoCall = false;
         this.changeDetector.detectChanges();
     }
 
     CloseAudio() {
+        this.myAudio.pause();
         this.isAudioCall = false;
         this.changeDetector.detectChanges();
     }
@@ -454,6 +482,16 @@ export class ChatWindowComponent implements OnInit, OnDestroy, OnChanges {
         }
 
     }
+
+    playRing() {
+            this.myAudio.load();
+            this.myAudio.addEventListener('ended', function() {
+                this.currentTime = 0;
+                this.play();
+            }, false);
+            this.myAudio.play();
+    }
+
 }
 
 export interface ChatAction {

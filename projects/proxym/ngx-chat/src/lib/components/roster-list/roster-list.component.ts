@@ -91,6 +91,7 @@ export class RosterListComponent implements OnInit {
 
     imgAway = require('../../../../../../../src/assets/away.png');
     imgAvailable = require('../../../../../../../src/assets/available.png');
+    imgDnd = require('../../../../../../../src/assets/dnd.png');
 
     public otherJid: any;
     me: string;

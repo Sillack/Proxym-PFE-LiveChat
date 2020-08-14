@@ -117,10 +117,12 @@ export class AppComponent {
     onLogin() {
         const logInRequest: LogInRequest = {
             domain: 'localhost',
-            service: 'wss://localhost:5280/xmpp',
+            service: 'wss://192.168.43.120:5280/xmpp',
             password: this.password,
             username: this.username,
         };
+        localStorage.clear();
+        sessionStorage.clear();
         localStorage.setItem('data', JSON.stringify(logInRequest));
         sessionStorage.setItem('username', this.username);
         this.chatService.logIn(logInRequest);
@@ -133,9 +135,10 @@ export class AppComponent {
         this.chatService.logOut();
         this.socketIOService.RemoveUser();
         sessionStorage.clear();
-        this.logi = false;
-       // location.reload();
         localStorage.clear();
+        this.logi = false;
+        //location.reload();
+
 
     }
 

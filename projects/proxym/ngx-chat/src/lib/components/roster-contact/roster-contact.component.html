@@ -13,6 +13,9 @@
         <div *ngIf="(contact.presence$ | async) == presence.away"
              [ngClass]="'roster-presence--' + (contact.presence$ | async)" class="roster-presence">●
         </div>
+        <div *ngIf="(contact.presence$ | async) == presence.dnd"
+             [ngClass]="'roster-presence--' + (contact.presence$ | async)" class="roster-presence">●
+        </div>
 
 
         <!--   <div *ngIf="(contact.presence$ | async) == presence.unavailable"
